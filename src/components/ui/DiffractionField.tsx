@@ -23,25 +23,39 @@ export const DiffractionField: React.FC = () => {
     let animationFrameId: number;
     let w = 0;
     let h = 0;
-    const dpr = window.devicePixelRatio || 1;
+    
+    // Cap DPR to 1.5 on mobile/tablets to drastically reduce rendering area, max 2.0 on desktop
+    const isMobileDevice = window.innerWidth < 768;
+    const dpr = Math.min(window.devicePixelRatio || 1, isMobileDevice ? 1.5 : 2.0);
 
     const particles: Particle[] = [];
-    const COUNT = 46;
-    const LINK_DIST = 150;
+    
+    // Dynamically adjust particle count and link distance based on screen size
+    let count = isMobileDevice ? 16 : 46;
+    let linkDist = isMobileDevice ? 90 : 150;
+    let linkDistSq = linkDist * linkDist;
 
     const resize = () => {
       w = window.innerWidth;
       h = window.innerHeight;
+      
+      const newIsMobile = w < 768;
+      count = newIsMobile ? 16 : 46;
+      linkDist = newIsMobile ? 90 : 150;
+      linkDistSq = linkDist * linkDist;
+
       canvas.width = w * dpr;
       canvas.height = h * dpr;
       canvas.style.width = `${w}px`;
       canvas.style.height = `${h}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      // Re-init particles if empty
-      if (particles.length === 0) {
-        for (let i = 0; i < COUNT; i++) {
-          const isRotating = Math.random() > 0.35; // ~65% of spikes rotate
+      // Adjust particle list length on window resize
+      if (particles.length > count) {
+        particles.length = count;
+      } else {
+        while (particles.length < count) {
+          const isRotating = Math.random() > 0.35;
           particles.push({
             x: Math.random() * w,
             y: Math.random() * h,
@@ -83,7 +97,8 @@ export const DiffractionField: React.FC = () => {
     const tick = () => {
       ctx.clearRect(0, 0, w, h);
 
-      for (const p of particles) {
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
         p.x += p.vx;
         p.y += p.vy;
         if (p.rotSpeed !== 0) {
@@ -95,15 +110,17 @@ export const DiffractionField: React.FC = () => {
         if (p.y > h + 20) p.y = -20;
       }
 
+      // Hot loop optimized to avoid Math.sqrt unless particles are within threshold
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const a = particles[i];
           const b = particles[j];
           const dx = a.x - b.x;
           const dy = a.y - b.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < LINK_DIST) {
-            ctx.strokeStyle = `rgba(0,0,0,${(1 - dist / LINK_DIST) * 0.15})`;
+          const distSq = dx * dx + dy * dy;
+          if (distSq < linkDistSq) {
+            const dist = Math.sqrt(distSq);
+            ctx.strokeStyle = `rgba(0,0,0,${(1 - dist / linkDist) * 0.15})`;
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.moveTo(a.x, a.y);
@@ -114,7 +131,8 @@ export const DiffractionField: React.FC = () => {
       }
 
       ctx.fillStyle = 'rgba(0,0,0,0.55)';
-      for (const p of particles) {
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
         drawSpike(p.x, p.y, p.size, p.angle);
       }
 
