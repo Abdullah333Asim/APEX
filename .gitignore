@@ -24,7 +24,7 @@ dist-ssr
 *.sw?
 
 # APEX custom ignores
-/public/cars
+# /public/cars (commented out so Vercel can access/deploy these images)
 .env
 .env.*
 .env.local
