@@ -3,5 +3,4 @@ Allow: /
 Disallow: /garage
 Disallow: /bracket/play
 
-# TODO: replace with real domain before deploy
-Sitemap: https://apex.example.com/sitemap.xml
+Sitemap: https://apex-brackets.vercel.app/sitemap.xml

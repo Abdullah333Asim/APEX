@@ -17,7 +17,7 @@ const fs   = require('fs');
 const path = require('path');
 
 // ── Config ────────────────────────────────────────────────────────────────────
-const SITE_URL  = 'https://apex.example.com'; // TODO: replace before deploy
+const SITE_URL  = 'https://apex-brackets.vercel.app';
 const SITE_NAME = 'APEX — Automotive Bracket';
 const DIST_DIR  = path.resolve(__dirname, '../dist');
 const CARS_FILE = path.resolve(__dirname, '../src/data/cars.json');
