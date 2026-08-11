@@ -4,10 +4,15 @@ import { motion } from 'framer-motion';
 import { Trophy, Zap, Crown, Flame, Shield, ArrowRight } from 'lucide-react';
 import { useBracketStore, BracketCategory } from '../store/useBracketStore';
 import { GlassButton } from '../components/ui/GlassButton';
+import { useDocumentHead } from '../hooks/useDocumentHead';
 
 export const BracketSetupPage: React.FC = () => {
   const navigate = useNavigate();
   const { initializeBracket } = useBracketStore();
+  useDocumentHead(
+    'Start a Bracket — APEX',
+    'Choose a division and pit 16 machines head-to-head in an elimination bracket to reveal your automotive taste profile.'
+  );
 
   const handleStartDivision = (cat: BracketCategory) => {
     initializeBracket(cat);
@@ -73,7 +78,7 @@ export const BracketSetupPage: React.FC = () => {
           Select Your Division
         </h1>
         <p className="mt-3 text-sm sm:text-base text-neutral-600 font-normal leading-relaxed">
-          Each tournament draws 8 random machines from your chosen category into a 3-round head-to-head elimination bracket. Every pick shapes your final 5-axis automotive taste profile.
+          Each tournament draws 16 random machines from your chosen category into a 4-round elimination bracket. Every pick shapes your final 5-axis automotive taste profile.
         </p>
       </div>
 
@@ -167,7 +172,7 @@ export const BracketSetupPage: React.FC = () => {
 
       {/* Rules Footer Pill */}
       <div className="mt-12 text-center text-xs font-mono text-neutral-500 uppercase tracking-widest">
-        8 Cars Draw &bull; Quarterfinals (4) &bull; Semifinals (2) &bull; Final (1) &bull; Taste Profile Generated
+        16 Cars Draw &bull; Round of 16 (8) &bull; Quarterfinals (4) &bull; Semifinals (2) &bull; Final (1) &bull; Taste Profile Generated
       </div>
     </div>
   );

@@ -5,10 +5,10 @@
     "model": "GR Supra 3.0",
     "year": 2024,
     "category": "normal",
-    "image": "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/toyota-gr-supra-30-2024.jpg",
     "engine": {
       "type": "Turbocharged Inline-6",
-      "displacementL": 3.0,
+      "displacementL": 3,
       "cylinders": 6,
       "layout": "Front-Engine"
     },
@@ -30,10 +30,10 @@
     "model": "Civic Type R",
     "year": 2024,
     "category": "normal",
-    "image": "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/honda-civic-type-r-2024.jpg",
     "engine": {
       "type": "Turbocharged Inline-4",
-      "displacementL": 2.0,
+      "displacementL": 2,
       "cylinders": 4,
       "layout": "Front-Engine"
     },
@@ -55,10 +55,10 @@
     "model": "MX-5 Miata Club",
     "year": 2024,
     "category": "normal",
-    "image": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/mazda-mx5-miata-club-2024.jpg",
     "engine": {
       "type": "Naturally Aspirated Inline-4",
-      "displacementL": 2.0,
+      "displacementL": 2,
       "cylinders": 4,
       "layout": "Front-Mid Engine"
     },
@@ -80,7 +80,7 @@
     "model": "WRX STI",
     "year": 2021,
     "category": "normal",
-    "image": "https://images.unsplash.com/photo-1563720223185-11003d516935?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/subaru-wrx-sti-2021.jpg",
     "engine": {
       "type": "Turbocharged Flat-4",
       "displacementL": 2.5,
@@ -105,10 +105,10 @@
     "model": "Mustang GT",
     "year": 2024,
     "category": "normal",
-    "image": "https://images.unsplash.com/photo-1584345604476-8ec5e12e42dd?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/ford-mustang-gt-2024.jpg",
     "engine": {
       "type": "Naturally Aspirated V8",
-      "displacementL": 5.0,
+      "displacementL": 5,
       "cylinders": 8,
       "layout": "Front-Engine"
     },
@@ -130,10 +130,10 @@
     "model": "Golf R",
     "year": 2024,
     "category": "normal",
-    "image": "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/volkswagen-golf-r-2024.jpg",
     "engine": {
       "type": "Turbocharged Inline-4",
-      "displacementL": 2.0,
+      "displacementL": 2,
       "cylinders": 4,
       "layout": "Front-Engine"
     },
@@ -155,10 +155,10 @@
     "model": "Elantra N",
     "year": 2024,
     "category": "normal",
-    "image": "https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/hyundai-elantra-n-2024.jpg",
     "engine": {
       "type": "Turbocharged Inline-4",
-      "displacementL": 2.0,
+      "displacementL": 2,
       "cylinders": 4,
       "layout": "Front-Engine"
     },
@@ -180,10 +180,10 @@
     "model": "Z Nismo",
     "year": 2024,
     "category": "normal",
-    "image": "https://images.unsplash.com/photo-1619405399517-d7fce0f13302?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/nissan-z-nismo-2024.jpg",
     "engine": {
       "type": "Twin-Turbo V6",
-      "displacementL": 3.0,
+      "displacementL": 3,
       "cylinders": 6,
       "layout": "Front-Engine"
     },
@@ -205,7 +205,7 @@
     "model": "Challenger SRT Hellcat",
     "year": 2023,
     "category": "normal",
-    "image": "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/dodge-challenger-srt-hellcat-2023.jpg",
     "engine": {
       "type": "Supercharged HEMI V8",
       "displacementL": 6.2,
@@ -230,7 +230,7 @@
     "model": "Camaro SS 1LE",
     "year": 2024,
     "category": "normal",
-    "image": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/chevrolet-camaro-ss-1le-2024.jpg",
     "engine": {
       "type": "Naturally Aspirated V8",
       "displacementL": 6.2,
@@ -240,7 +240,7 @@
     "horsepower": 455,
     "torqueLbFt": 455,
     "topSpeedMph": 165,
-    "zeroToSixtyS": 4.0,
+    "zeroToSixtyS": 4,
     "priceUsd": 47500,
     "weightLbs": 3747,
     "drivetrain": "RWD",
@@ -255,7 +255,7 @@
     "model": "GR Yaris",
     "year": 2024,
     "category": "normal",
-    "image": "https://images.unsplash.com/photo-1590362891991-f776e747a588?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/toyota-gr-yaris-2024.jpg",
     "engine": {
       "type": "Turbocharged Inline-3",
       "displacementL": 1.6,
@@ -280,7 +280,7 @@
     "model": "BRZ tS",
     "year": 2024,
     "category": "normal",
-    "image": "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/subaru-brz-ts-2024.jpg",
     "engine": {
       "type": "Naturally Aspirated Flat-4",
       "displacementL": 2.4,
@@ -305,7 +305,7 @@
     "model": "Ioniq 5 N",
     "year": 2024,
     "category": "normal",
-    "image": "https://images.unsplash.com/photo-1563720223185-11003d516935?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/hyundai-ioniq-5-n-2024.jpg",
     "engine": {
       "type": "Dual Electric Motors",
       "displacementL": null,
@@ -330,7 +330,7 @@
     "model": "Focus RS",
     "year": 2018,
     "category": "normal",
-    "image": "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/ford-focus-rs-2018.jpg",
     "engine": {
       "type": "Turbocharged Inline-4",
       "displacementL": 2.3,
@@ -355,7 +355,7 @@
     "model": "Stinger GT2",
     "year": 2023,
     "category": "normal",
-    "image": "https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/kia-stinger-gt2-2023.jpg",
     "engine": {
       "type": "Twin-Turbo V6",
       "displacementL": 3.3,
@@ -380,10 +380,10 @@
     "model": "Golf GTI 380",
     "year": 2024,
     "category": "normal",
-    "image": "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/volkswagen-gti-380-2024.jpg",
     "engine": {
       "type": "Turbocharged Inline-4",
-      "displacementL": 2.0,
+      "displacementL": 2,
       "cylinders": 4,
       "layout": "Front-Engine"
     },
@@ -405,17 +405,17 @@
     "model": "John Cooper Works GP",
     "year": 2021,
     "category": "normal",
-    "image": "https://images.unsplash.com/photo-1590362891991-f776e747a588?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/mini-john-cooper-works-gp-2021.jpg",
     "engine": {
       "type": "Turbocharged Inline-4",
-      "displacementL": 2.0,
+      "displacementL": 2,
       "cylinders": 4,
       "layout": "Front-Engine"
     },
     "horsepower": 301,
     "torqueLbFt": 332,
     "topSpeedMph": 165,
-    "zeroToSixtyS": 5.0,
+    "zeroToSixtyS": 5,
     "priceUsd": 45750,
     "weightLbs": 2855,
     "drivetrain": "FWD",
@@ -430,7 +430,7 @@
     "model": "GR86 Trueno Edition",
     "year": 2024,
     "category": "normal",
-    "image": "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/toyota-gr86-trueno-2024.jpg",
     "engine": {
       "type": "Naturally Aspirated Flat-4",
       "displacementL": 2.4,
@@ -455,17 +455,17 @@
     "model": "911 GT3 RS",
     "year": 2024,
     "category": "luxury",
-    "image": "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/porsche-911-gt3-rs-2024.jpg",
     "engine": {
       "type": "Naturally Aspirated Flat-6",
-      "displacementL": 4.0,
+      "displacementL": 4,
       "cylinders": 6,
       "layout": "Rear-Engine"
     },
     "horsepower": 518,
     "torqueLbFt": 342,
     "topSpeedMph": 184,
-    "zeroToSixtyS": 3.0,
+    "zeroToSixtyS": 3,
     "priceUsd": 241300,
     "weightLbs": 3268,
     "drivetrain": "RWD",
@@ -480,7 +480,7 @@
     "model": "M5 CS",
     "year": 2022,
     "category": "luxury",
-    "image": "https://images.unsplash.com/photo-1555215695-3004980ad54e?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/bmw-m5-cs-2022.jpg",
     "engine": {
       "type": "Twin-Turbo V8",
       "displacementL": 4.4,
@@ -505,10 +505,10 @@
     "model": "AMG GT Black Series",
     "year": 2021,
     "category": "luxury",
-    "image": "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/mercedes-amg-gt-black-series-2021.jpg",
     "engine": {
       "type": "Flat-Plane Twin-Turbo V8",
-      "displacementL": 4.0,
+      "displacementL": 4,
       "cylinders": 8,
       "layout": "Front-Mid Engine"
     },
@@ -530,7 +530,7 @@
     "model": "R8 V10 Performance",
     "year": 2023,
     "category": "luxury",
-    "image": "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/audi-r8-v10-performance-2023.jpg",
     "engine": {
       "type": "Naturally Aspirated V10",
       "displacementL": 5.2,
@@ -555,7 +555,7 @@
     "model": "LFA",
     "year": 2012,
     "category": "luxury",
-    "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/lexus-lfa-2012.jpg",
     "engine": {
       "type": "Naturally Aspirated V10",
       "displacementL": 4.8,
@@ -580,10 +580,10 @@
     "model": "Vantage",
     "year": 2025,
     "category": "luxury",
-    "image": "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/aston-martin-vantage-2025.jpg",
     "engine": {
       "type": "Twin-Turbo V8",
-      "displacementL": 4.0,
+      "displacementL": 4,
       "cylinders": 8,
       "layout": "Front-Mid Engine"
     },
@@ -605,7 +605,7 @@
     "model": "Corvette Z06",
     "year": 2024,
     "category": "luxury",
-    "image": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/chevrolet-corvette-z06-2024.jpg",
     "engine": {
       "type": "Flat-Plane V8 (LT6)",
       "displacementL": 5.5,
@@ -630,10 +630,10 @@
     "model": "MC20",
     "year": 2024,
     "category": "luxury",
-    "image": "https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/maserati-mc20-2024.jpg",
     "engine": {
       "type": "Twin-Turbo Nettuno V6",
-      "displacementL": 3.0,
+      "displacementL": 3,
       "cylinders": 6,
       "layout": "Mid-Engine"
     },
@@ -655,10 +655,10 @@
     "model": "296 GTB",
     "year": 2024,
     "category": "luxury",
-    "image": "https://images.unsplash.com/photo-1583121274602-3e2820c69888?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/ferrari-296-gtb-2024.jpg",
     "engine": {
       "type": "Twin-Turbo V6 Hybrid",
-      "displacementL": 3.0,
+      "displacementL": 3,
       "cylinders": 6,
       "layout": "Mid-Engine"
     },
@@ -680,10 +680,10 @@
     "model": "750S",
     "year": 2024,
     "category": "luxury",
-    "image": "https://images.unsplash.com/photo-1621135802920-133df287f89c?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/mclaren-750s-2024.jpg",
     "engine": {
       "type": "Twin-Turbo V8",
-      "displacementL": 4.0,
+      "displacementL": 4,
       "cylinders": 8,
       "layout": "Mid-Engine"
     },
@@ -705,7 +705,7 @@
     "model": "Huracán Tecnica",
     "year": 2023,
     "category": "luxury",
-    "image": "https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/lamborghini-huracan-tecnica-2023.jpg",
     "engine": {
       "type": "Naturally Aspirated V10",
       "displacementL": 5.2,
@@ -730,10 +730,10 @@
     "model": "M3 Competition xDrive",
     "year": 2024,
     "category": "luxury",
-    "image": "https://images.unsplash.com/photo-1555215695-3004980ad54e?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/bmw-m3-competition-xdrive-2024.jpg",
     "engine": {
       "type": "Twin-Turbo Inline-6",
-      "displacementL": 3.0,
+      "displacementL": 3,
       "cylinders": 6,
       "layout": "Front-Engine"
     },
@@ -755,10 +755,10 @@
     "model": "RS6 Avant",
     "year": 2024,
     "category": "luxury",
-    "image": "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/audi-rs6-avant-2024.jpg",
     "engine": {
       "type": "Twin-Turbo V8",
-      "displacementL": 4.0,
+      "displacementL": 4,
       "cylinders": 8,
       "layout": "Front-Engine"
     },
@@ -780,10 +780,10 @@
     "model": "Continental GT Speed",
     "year": 2024,
     "category": "luxury",
-    "image": "https://images.unsplash.com/photo-1563720223185-11003d516935?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/bentley-continental-gt-speed-2024.jpg",
     "engine": {
       "type": "Twin-Turbo W12",
-      "displacementL": 6.0,
+      "displacementL": 6,
       "cylinders": 12,
       "layout": "Front-Engine"
     },
@@ -805,7 +805,7 @@
     "model": "Taycan Turbo S",
     "year": 2024,
     "category": "luxury",
-    "image": "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/porsche-taycan-turbo-s-2024.jpg",
     "engine": {
       "type": "Dual Permanent Magnet Electric",
       "displacementL": null,
@@ -830,7 +830,7 @@
     "model": "CT5-V Blackwing",
     "year": 2024,
     "category": "luxury",
-    "image": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/cadillac-ct5v-blackwing-2024.jpg",
     "engine": {
       "type": "Supercharged V8",
       "displacementL": 6.2,
@@ -855,7 +855,7 @@
     "model": "Model S Plaid",
     "year": 2024,
     "category": "luxury",
-    "image": "https://images.unsplash.com/photo-1563720223185-11003d516935?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/tesla-model-s-plaid-2024.jpg",
     "engine": {
       "type": "Tri-Motor Electric",
       "displacementL": null,
@@ -880,7 +880,7 @@
     "model": "Air Sapphire",
     "year": 2024,
     "category": "luxury",
-    "image": "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/lucid-air-sapphire-2024.jpg",
     "engine": {
       "type": "Tri-Motor Electric",
       "displacementL": null,
@@ -905,10 +905,10 @@
     "model": "718 Cayman GT4 RS",
     "year": 2024,
     "category": "luxury",
-    "image": "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/porsche-718-cayman-gt4-rs-2024.jpg",
     "engine": {
       "type": "Naturally Aspirated Flat-6",
-      "displacementL": 4.0,
+      "displacementL": 4,
       "cylinders": 6,
       "layout": "Mid-Engine"
     },
@@ -930,7 +930,7 @@
     "model": "GT-R Nismo",
     "year": 2024,
     "category": "luxury",
-    "image": "https://images.unsplash.com/photo-1619405399517-d7fce0f13302?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/nissan-gtr-nismo-2024.jpg",
     "engine": {
       "type": "Twin-Turbo VR38DETT V6",
       "displacementL": 3.8,
@@ -955,10 +955,10 @@
     "model": "DB12",
     "year": 2024,
     "category": "luxury",
-    "image": "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/aston-martin-db12-2024.jpg",
     "engine": {
       "type": "Twin-Turbo V8",
-      "displacementL": 4.0,
+      "displacementL": 4,
       "cylinders": 8,
       "layout": "Front-Mid Engine"
     },
@@ -980,10 +980,10 @@
     "model": "LC 500",
     "year": 2024,
     "category": "luxury",
-    "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/lexus-lc-500-2024.jpg",
     "engine": {
       "type": "Naturally Aspirated V8",
-      "displacementL": 5.0,
+      "displacementL": 5,
       "cylinders": 8,
       "layout": "Front-Engine"
     },
@@ -1005,10 +1005,10 @@
     "model": "Chiron Super Sport",
     "year": 2022,
     "category": "hyper",
-    "image": "https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/bugatti-chiron-super-sport-2022.jpg",
     "engine": {
       "type": "Quad-Turbo W16",
-      "displacementL": 8.0,
+      "displacementL": 8,
       "cylinders": 16,
       "layout": "Mid-Engine"
     },
@@ -1030,10 +1030,10 @@
     "model": "Jesko Attack",
     "year": 2023,
     "category": "hyper",
-    "image": "https://images.unsplash.com/photo-1621135802920-133df287f89c?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/koenigsegg-jesko-attack-2023.jpg",
     "engine": {
       "type": "Flat-Plane Twin-Turbo V8",
-      "displacementL": 5.0,
+      "displacementL": 5,
       "cylinders": 8,
       "layout": "Mid-Engine"
     },
@@ -1055,10 +1055,10 @@
     "model": "Huayra Roadster BC",
     "year": 2021,
     "category": "hyper",
-    "image": "https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/pagani-huayra-roadster-bc-2021.jpg",
     "engine": {
       "type": "AMG Twin-Turbo V12",
-      "displacementL": 6.0,
+      "displacementL": 6,
       "cylinders": 12,
       "layout": "Mid-Engine"
     },
@@ -1080,7 +1080,7 @@
     "model": "Nevera",
     "year": 2023,
     "category": "hyper",
-    "image": "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/rimac-nevera-2023.jpg",
     "engine": {
       "type": "Quad Electric Motors",
       "displacementL": null,
@@ -1105,10 +1105,10 @@
     "model": "Senna",
     "year": 2019,
     "category": "hyper",
-    "image": "https://images.unsplash.com/photo-1621135802920-133df287f89c?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/mclaren-senna-2019.jpg",
     "engine": {
       "type": "Twin-Turbo V8",
-      "displacementL": 4.0,
+      "displacementL": 4,
       "cylinders": 8,
       "layout": "Mid-Engine"
     },
@@ -1130,7 +1130,7 @@
     "model": "LaFerrari",
     "year": 2015,
     "category": "hyper",
-    "image": "https://images.unsplash.com/photo-1583121274602-3e2820c69888?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/ferrari-laferrari-2015.jpg",
     "engine": {
       "type": "Naturally Aspirated V12 HY-KERS",
       "displacementL": 6.3,
@@ -1155,7 +1155,7 @@
     "model": "Valkyrie",
     "year": 2023,
     "category": "hyper",
-    "image": "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/aston-martin-valkyrie-2023.jpg",
     "engine": {
       "type": "Cosworth Naturally Aspirated V12 Hybrid",
       "displacementL": 6.5,
@@ -1180,7 +1180,7 @@
     "model": "918 Spyder",
     "year": 2015,
     "category": "hyper",
-    "image": "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/porsche-918-spyder-2015.jpg",
     "engine": {
       "type": "Naturally Aspirated V8 Plug-In Hybrid",
       "displacementL": 4.6,
@@ -1205,10 +1205,10 @@
     "model": "Regera",
     "year": 2021,
     "category": "hyper",
-    "image": "https://images.unsplash.com/photo-1621135802920-133df287f89c?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/koenigsegg-regera-2021.jpg",
     "engine": {
       "type": "Twin-Turbo V8 Direct Drive Hybrid",
-      "displacementL": 5.0,
+      "displacementL": 5,
       "cylinders": 8,
       "layout": "Mid-Engine"
     },
@@ -1230,7 +1230,7 @@
     "model": "AMG ONE",
     "year": 2023,
     "category": "hyper",
-    "image": "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/mercedes-amg-one-2023.jpg",
     "engine": {
       "type": "Formula 1 1.6L V6 Turbo Hybrid",
       "displacementL": 1.6,
@@ -1255,7 +1255,7 @@
     "model": "Evija",
     "year": 2024,
     "category": "hyper",
-    "image": "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/lotus-evija-2024.jpg",
     "engine": {
       "type": "Quad Electric Motors",
       "displacementL": null,
@@ -1280,7 +1280,7 @@
     "model": "P1",
     "year": 2015,
     "category": "hyper",
-    "image": "https://images.unsplash.com/photo-1621135802920-133df287f89c?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/mclaren-p1-2015.jpg",
     "engine": {
       "type": "Twin-Turbo V8 Hybrid",
       "displacementL": 3.8,
@@ -1305,7 +1305,7 @@
     "model": "Tourbillon",
     "year": 2026,
     "category": "hyper",
-    "image": "https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/bugatti-tourbillon-2026.jpg",
     "engine": {
       "type": "Cosworth 8.3L V16 Hybrid",
       "displacementL": 8.3,
@@ -1315,7 +1315,7 @@
     "horsepower": 1775,
     "torqueLbFt": 1696,
     "topSpeedMph": 276,
-    "zeroToSixtyS": 2.0,
+    "zeroToSixtyS": 2,
     "priceUsd": 4100000,
     "weightLbs": 4398,
     "drivetrain": "AWD",
@@ -1330,10 +1330,10 @@
     "model": "Veyron 16.4 Super Sport",
     "year": 2011,
     "category": "hyper",
-    "image": "https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/bugatti-veyron-super-sport-2011.jpg",
     "engine": {
       "type": "Quad-Turbo W16",
-      "displacementL": 8.0,
+      "displacementL": 8,
       "cylinders": 16,
       "layout": "Mid-Engine"
     },
@@ -1355,7 +1355,7 @@
     "model": "Venom F5",
     "year": 2023,
     "category": "hyper",
-    "image": "https://images.unsplash.com/photo-1584345604476-8ec5e12e42dd?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/hennessey-venom-f5-2023.jpg",
     "engine": {
       "type": "Fury Twin-Turbo V8",
       "displacementL": 6.6,
@@ -1380,7 +1380,7 @@
     "model": "T.50",
     "year": 2024,
     "category": "hyper",
-    "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/gordon-murray-t50-2024.jpg",
     "engine": {
       "type": "Cosworth V12",
       "displacementL": 3.9,
@@ -1405,7 +1405,7 @@
     "model": "Daytona SP3",
     "year": 2023,
     "category": "hyper",
-    "image": "https://images.unsplash.com/photo-1583121274602-3e2820c69888?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/ferrari-daytona-sp3-2023.jpg",
     "engine": {
       "type": "Naturally Aspirated V12",
       "displacementL": 6.5,
@@ -1430,7 +1430,7 @@
     "model": "Revuelto",
     "year": 2024,
     "category": "hyper",
-    "image": "https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?q=80&w=1200&auto=format&fit=crop",
+    "image": "/cars/lamborghini-revuelto-2024.jpg",
     "engine": {
       "type": "Naturally Aspirated V12 HPEV Hybrid",
       "displacementL": 6.5,

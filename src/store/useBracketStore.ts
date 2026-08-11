@@ -3,7 +3,7 @@ import { Car } from '../types/car';
 import { getCarsByCategory } from '../data/carsData';
 
 export type BracketCategory = 'normal' | 'luxury' | 'hyper';
-export type RoundName = 'quarterfinals' | 'semifinals' | 'final' | 'completed';
+export type RoundName = 'round-of-16' | 'quarterfinals' | 'semifinals' | 'final' | 'completed';
 
 export interface BracketState {
   category: BracketCategory | null;
@@ -39,10 +39,18 @@ const makePairs = (cars: Car[]): [Car, Car][] => {
   return pairs;
 };
 
+const nextRound: Record<RoundName, RoundName | null> = {
+  'round-of-16': 'quarterfinals',
+  quarterfinals: 'semifinals',
+  semifinals: 'final',
+  final: 'completed',
+  completed: null,
+};
+
 export const useBracketStore = create<BracketState>()((set, get) => ({
   category: null,
   pool: [],
-  roundName: 'quarterfinals',
+  roundName: 'round-of-16',
   currentMatchupIndex: 0,
   roundMatchups: [],
   nextRoundWinners: [],
@@ -52,15 +60,15 @@ export const useBracketStore = create<BracketState>()((set, get) => ({
   initializeBracket: (category: BracketCategory) => {
     const candidates = getCarsByCategory(category);
     const shuffled = shuffleArray(candidates);
-    const pool = shuffled.slice(0, 8);
-    const qfPairs = makePairs(pool);
+    const pool = shuffled.slice(0, 16);
+    const r16Pairs = makePairs(pool);
 
     set({
       category,
       pool,
-      roundName: 'quarterfinals',
+      roundName: 'round-of-16',
       currentMatchupIndex: 0,
-      roundMatchups: qfPairs,
+      roundMatchups: r16Pairs,
       nextRoundWinners: [],
       winnersHistory: [],
       champion: null,
@@ -68,53 +76,51 @@ export const useBracketStore = create<BracketState>()((set, get) => ({
   },
 
   pickWinner: (carId: string) => {
-    const { roundMatchups, currentMatchupIndex, nextRoundWinners, winnersHistory, roundName } = get();
-    
+    const {
+      roundMatchups,
+      currentMatchupIndex,
+      nextRoundWinners,
+      winnersHistory,
+      roundName,
+    } = get();
+
     if (roundMatchups.length === 0 || !roundMatchups[currentMatchupIndex]) return;
 
     const currentPair = roundMatchups[currentMatchupIndex];
     const winningCar = currentPair.find((c) => c.id === carId);
-
     if (!winningCar) return;
 
     const updatedHistory = [...winnersHistory, winningCar];
     const updatedNextWinners = [...nextRoundWinners, winningCar];
 
-    // Check if more matchups remain in current round
+    // More matchups remain in this round
     if (currentMatchupIndex < roundMatchups.length - 1) {
       set({
         winnersHistory: updatedHistory,
         nextRoundWinners: updatedNextWinners,
         currentMatchupIndex: currentMatchupIndex + 1,
       });
+      return;
+    }
+
+    // This round is finished — advance to next
+    if (roundName === 'final') {
+      set({
+        winnersHistory: updatedHistory,
+        nextRoundWinners: [],
+        roundName: 'completed',
+        champion: winningCar,
+      });
     } else {
-      // Current round finished
-      if (roundName === 'quarterfinals') {
-        const sfPairs = makePairs(updatedNextWinners);
-        set({
-          winnersHistory: updatedHistory,
-          nextRoundWinners: [],
-          roundName: 'semifinals',
-          currentMatchupIndex: 0,
-          roundMatchups: sfPairs,
-        });
-      } else if (roundName === 'semifinals') {
-        const finalPair = makePairs(updatedNextWinners);
-        set({
-          winnersHistory: updatedHistory,
-          nextRoundWinners: [],
-          roundName: 'final',
-          currentMatchupIndex: 0,
-          roundMatchups: finalPair,
-        });
-      } else if (roundName === 'final') {
-        set({
-          winnersHistory: updatedHistory,
-          nextRoundWinners: [],
-          roundName: 'completed',
-          champion: winningCar,
-        });
-      }
+      const next = nextRound[roundName]!;
+      const nextPairs = makePairs(updatedNextWinners);
+      set({
+        winnersHistory: updatedHistory,
+        nextRoundWinners: [],
+        roundName: next,
+        currentMatchupIndex: 0,
+        roundMatchups: nextPairs,
+      });
     }
   },
 
@@ -122,7 +128,7 @@ export const useBracketStore = create<BracketState>()((set, get) => ({
     set({
       category: null,
       pool: [],
-      roundName: 'quarterfinals',
+      roundName: 'round-of-16',
       currentMatchupIndex: 0,
       roundMatchups: [],
       nextRoundWinners: [],

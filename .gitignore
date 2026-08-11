@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# APEX custom ignores
+/public/cars
+.env
+.env.*
+.env.local
+

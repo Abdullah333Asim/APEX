@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Trophy, Compass, Bookmark, Gauge } from 'lucide-react';
+import { Trophy, Compass, Bookmark } from 'lucide-react';
+import { ApexLogo } from '../ui/ApexLogo';
 import { useGarageStore, GarageState } from '../../store/useGarageStore';
 
 export const Navbar: React.FC = () => {
@@ -23,18 +24,8 @@ export const Navbar: React.FC = () => {
     <header className="sticky top-0 z-50 w-full border-b border-black/10 bg-white/70 backdrop-blur-md transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         {/* Brand Logo */}
-        <Link to="/" className="flex items-center gap-3 group">
-          <div className="w-9 h-9 rounded-sm bg-[#14110f] flex items-center justify-center text-white shadow-md group-hover:bg-[#C63A16] transition-colors duration-300">
-            <Gauge className="w-5 h-5 text-[#f7f5f2]" />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-extrabold text-2xl tracking-[0.25em] text-[#14110f] uppercase leading-none font-mono">
-              APEX<span className="text-[#C63A16]">.</span>
-            </span>
-            <span className="text-[9px] tracking-[0.3em] text-neutral-500 uppercase font-medium mt-1">
-              Automotive Bracket
-            </span>
-          </div>
+        <Link to="/" className="flex items-center group" aria-label="APEX Home">
+          <ApexLogo width={120} className="transition-opacity duration-200 group-hover:opacity-80" />
         </Link>
 
         {/* Navigation Links */}

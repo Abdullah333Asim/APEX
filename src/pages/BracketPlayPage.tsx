@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Trophy, Flame, Swords, Zap, CheckCircle2 } from 'lucide-react';
+import { Trophy, Flame, Swords, CheckCircle2 } from 'lucide-react';
 import { useBracketStore } from '../store/useBracketStore';
 import { GlassButton } from '../components/ui/GlassButton';
 import { Car } from '../types/car';
+import { useDocumentHead } from '../hooks/useDocumentHead';
+
+// Total matches for 16 cars = 8 + 4 + 2 + 1 = 15
+const TOTAL_MATCHES = 15;
 
 export const BracketPlayPage: React.FC = () => {
   const navigate = useNavigate();
@@ -19,15 +23,17 @@ export const BracketPlayPage: React.FC = () => {
   } = useBracketStore();
 
   const [animatingWinnerId, setAnimatingWinnerId] = useState<string | null>(null);
+  useDocumentHead(
+    'Tournament in Progress — APEX',
+    'An elimination bracket is underway. Pick your favourite machine in each head-to-head matchup.'
+  );
 
-  // If tournament completed, redirect to results page
   useEffect(() => {
-    if (roundName === 'completed' || champion) {
-      navigate('/bracket/result');
+    if (roundName === 'completed' && champion) {
+      navigate(`/bracket/result/${champion.id}`);
     }
   }, [roundName, champion, navigate]);
 
-  // If no active bracket, redirect to setup
   if (!category || roundMatchups.length === 0 || !roundMatchups[currentMatchupIndex]) {
     return (
       <div className="flex-1 max-w-7xl mx-auto px-4 py-16 flex flex-col items-center justify-center text-center">
@@ -37,7 +43,7 @@ export const BracketPlayPage: React.FC = () => {
             No Active Bracket
           </h2>
           <p className="text-xs text-neutral-600 mb-8">
-            Please select a division to launch an 8-car elimination tournament.
+            Please select a division to launch a 16-car elimination tournament.
           </p>
           <GlassButton to="/bracket" variant="primary">
             Select a Division
@@ -50,26 +56,23 @@ export const BracketPlayPage: React.FC = () => {
   const currentPair = roundMatchups[currentMatchupIndex];
   const [carA, carB] = currentPair;
 
-  // Calculate round title and progress
-  let roundTitle = '';
-  let currentStepNumber = 1;
-  const totalMatchesInTournament = 7;
+  // Round labels & global match step
+  const roundConfig: Record<string, { label: string; matchesInRound: number; startStep: number }> = {
+    'round-of-16':  { label: 'Round of 16',     matchesInRound: 8, startStep: 1  },
+    'quarterfinals':{ label: 'Quarterfinals',    matchesInRound: 4, startStep: 9  },
+    'semifinals':   { label: 'Semifinals',       matchesInRound: 2, startStep: 13 },
+    'final':        { label: 'The Grand Final',  matchesInRound: 1, startStep: 15 },
+  };
 
-  if (roundName === 'quarterfinals') {
-    roundTitle = `Quarterfinal ${currentMatchupIndex + 1} of 4`;
-    currentStepNumber = currentMatchupIndex + 1;
-  } else if (roundName === 'semifinals') {
-    roundTitle = `Semifinal ${currentMatchupIndex + 1} of 2`;
-    currentStepNumber = 4 + currentMatchupIndex + 1;
-  } else if (roundName === 'final') {
-    roundTitle = 'The Championship Final';
-    currentStepNumber = 7;
-  }
+  const cfg = roundConfig[roundName] || roundConfig['round-of-16'];
+  const globalStep = cfg.startStep + currentMatchupIndex;
+  const roundTitle = roundName === 'final'
+    ? cfg.label
+    : `${cfg.label} — Match ${currentMatchupIndex + 1} of ${cfg.matchesInRound}`;
 
   const handlePick = (winningCarId: string) => {
-    if (animatingWinnerId) return; // Prevent double taps during animation
+    if (animatingWinnerId) return;
     setAnimatingWinnerId(winningCarId);
-
     setTimeout(() => {
       pickWinner(winningCarId);
       setAnimatingWinnerId(null);
@@ -82,26 +85,26 @@ export const BracketPlayPage: React.FC = () => {
       <div className="flex flex-col items-center text-center mb-8">
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-black/5 border border-black/10 text-[11px] font-mono font-bold uppercase tracking-widest text-[#C63A16] mb-3">
           <Swords className="w-3.5 h-3.5" />
-          <span>{category?.toUpperCase()} DIVISION TOURNAMENT</span>
+          <span>{category?.toUpperCase()} DIVISION — 16-CAR TOURNAMENT</span>
         </div>
 
         <h1 className="text-2xl sm:text-4xl font-extrabold uppercase text-[#14110f] tracking-tight">
           {roundTitle}
         </h1>
 
-        {/* Progress Tracker Dots */}
-        <div className="flex items-center gap-2 mt-4">
-          {Array.from({ length: totalMatchesInTournament }).map((_, idx) => {
+        {/* Progress Tracker Dots — 15 total */}
+        <div className="flex items-center gap-1.5 mt-4 flex-wrap justify-center">
+          {Array.from({ length: TOTAL_MATCHES }).map((_, idx) => {
             const isCompleted = idx < winnersHistory.length;
-            const isCurrent = idx === winnersHistory.length;
+            const isCurrent   = idx === winnersHistory.length;
             return (
               <div
                 key={idx}
                 className={`h-2 rounded-full transition-all duration-300 ${
                   isCompleted
-                    ? 'w-6 bg-[#C63A16]'
+                    ? 'w-5 bg-[#C63A16]'
                     : isCurrent
-                    ? 'w-8 bg-[#14110f] animate-pulse'
+                    ? 'w-7 bg-[#14110f] animate-pulse'
                     : 'w-2 bg-black/15'
                 }`}
                 title={`Match ${idx + 1}`}
@@ -110,7 +113,7 @@ export const BracketPlayPage: React.FC = () => {
           })}
         </div>
         <span className="text-[10px] font-mono text-neutral-400 mt-2 uppercase tracking-widest">
-          Match {currentStepNumber} of 7 &bull; Tap a car to advance
+          Match {globalStep} of {TOTAL_MATCHES} &bull; Tap a car to advance
         </span>
       </div>
 
@@ -130,7 +133,6 @@ export const BracketPlayPage: React.FC = () => {
             transition={{ duration: 0.3 }}
             className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-10"
           >
-            {/* Competitor Card A */}
             <CompetitorCard
               car={carA}
               isWinner={animatingWinnerId === carA.id}
@@ -139,8 +141,6 @@ export const BracketPlayPage: React.FC = () => {
               disabled={!!animatingWinnerId}
               align="left"
             />
-
-            {/* Competitor Card B */}
             <CompetitorCard
               car={carB}
               isWinner={animatingWinnerId === carB.id}
@@ -155,7 +155,7 @@ export const BracketPlayPage: React.FC = () => {
 
       {/* Bottom Hint */}
       <div className="mt-8 text-center text-xs font-mono text-neutral-400 uppercase tracking-widest">
-        Compare Horsepower, Top Speed & MSRP &bull; Winner Advances to Next Bracket Round
+        Compare Horsepower, Top Speed &amp; MSRP &bull; Winner Advances to Next Round
       </div>
     </div>
   );
@@ -193,7 +193,6 @@ const CompetitorCard: React.FC<CompetitorCardProps> = ({
           : 'border-black/10 hover:border-black/30 hover:shadow-xl'
       } ${disabled ? 'pointer-events-none' : ''}`}
     >
-      {/* Selection Confirmation Ribbon */}
       {isWinner && (
         <div className="absolute top-4 left-4 z-30 bg-[#C63A16] text-white text-xs font-mono font-bold uppercase tracking-widest px-3 py-1.5 rounded shadow flex items-center gap-1.5 animate-bounce">
           <CheckCircle2 className="w-4 h-4" />
@@ -201,11 +200,10 @@ const CompetitorCard: React.FC<CompetitorCardProps> = ({
         </div>
       )}
 
-      {/* Car Image */}
       <div className="relative h-64 sm:h-72 w-full overflow-hidden bg-neutral-100">
         <img
           src={car.image}
-          alt={`${car.brand} ${car.model}`}
+          alt={`${car.year} ${car.brand} ${car.model}`}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
         <div className="absolute top-4 right-4 bg-black/85 backdrop-blur-md px-3 py-1 rounded text-[10px] font-mono font-bold tracking-widest uppercase text-white">
@@ -216,7 +214,6 @@ const CompetitorCard: React.FC<CompetitorCardProps> = ({
         </div>
       </div>
 
-      {/* Specs Content */}
       <div className="p-6 flex-1 flex flex-col justify-between">
         <div>
           <div className="text-xs font-mono uppercase tracking-widest text-neutral-500">
@@ -230,7 +227,6 @@ const CompetitorCard: React.FC<CompetitorCardProps> = ({
           </p>
         </div>
 
-        {/* Comparison Stat Grid */}
         <div className="grid grid-cols-2 gap-3 my-5 pt-4 border-t border-black/10 font-mono text-xs">
           <div className="p-2.5 bg-black/5 rounded">
             <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Horsepower</span>
@@ -238,7 +234,7 @@ const CompetitorCard: React.FC<CompetitorCardProps> = ({
           </div>
           <div className="p-2.5 bg-black/5 rounded">
             <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Top Speed</span>
-            <span className="text-lg font-extrabold text-[#14110f]">{car.topSpeedMph} <span className="text-xs font-normal text-neutral-500">MPH</span></span>
+            <span className="text-lg font-extrabold text-[#14110f]">{car.topSpeedMph} MPH / {Math.round(car.topSpeedMph * 1.60934)} KPH</span>
           </div>
           <div className="p-2.5 bg-black/5 rounded">
             <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">0–60 MPH</span>
@@ -250,7 +246,6 @@ const CompetitorCard: React.FC<CompetitorCardProps> = ({
           </div>
         </div>
 
-        {/* Action Button */}
         <GlassButton
           variant={isWinner ? 'primary' : 'secondary'}
           className="w-full text-xs py-3"

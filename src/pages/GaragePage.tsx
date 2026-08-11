@@ -2,11 +2,16 @@ import React, { useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bookmark, Flame, Trash2, Zap, Gauge, DollarSign, Crown, ArrowRight, Compass } from 'lucide-react';
 import { useGarageStore } from '../store/useGarageStore';
-import { allCars } from '../data/carsData';
+import { allCars, formatCompactPrice } from '../data/carsData';
 import { GlassButton } from '../components/ui/GlassButton';
+import { useDocumentHead } from '../hooks/useDocumentHead';
 
 export const GaragePage: React.FC = () => {
   const { savedIds, toggleSave, clearGarage } = useGarageStore();
+  useDocumentHead(
+    'My Garage — APEX',
+    'Your personally saved cars from the APEX catalog. Saved to your browser with no account required.'
+  );
 
   // Match saved IDs to full Car objects from dataset
   const savedCars = useMemo(() => {
@@ -98,7 +103,7 @@ export const GaragePage: React.FC = () => {
               <div>
                 <span className="text-[10px] text-neutral-400 uppercase tracking-wider block mb-1">Total Collection MSRP</span>
                 <span className="text-xl sm:text-2xl font-extrabold text-[#C63A16]">
-                  ${(metrics.totalValue / 1000).toLocaleString(undefined, { maximumFractionDigits: 1 })}k
+                  ${formatCompactPrice(metrics.totalValue)}
                 </span>
               </div>
               <div>
@@ -110,7 +115,7 @@ export const GaragePage: React.FC = () => {
               <div>
                 <span className="text-[10px] text-neutral-400 uppercase tracking-wider block mb-1">Top Speed Peak</span>
                 <span className="text-xl sm:text-2xl font-extrabold text-[#14110f]">
-                  {metrics.maxSpeed} <span className="text-xs font-normal text-neutral-500">MPH</span>
+                  {metrics.maxSpeed} MPH / {Math.round(metrics.maxSpeed * 1.60934)} KPH
                 </span>
               </div>
               <div>
@@ -139,7 +144,7 @@ export const GaragePage: React.FC = () => {
                   <div className="relative h-52 w-full overflow-hidden bg-neutral-100">
                     <img
                       src={car.image}
-                      alt={`${car.brand} ${car.model}`}
+                      alt={`${car.year} ${car.brand} ${car.model}`}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute top-3 left-3 bg-black/80 backdrop-blur-md px-2.5 py-1 rounded text-[10px] font-mono font-bold tracking-widest uppercase text-white">
@@ -172,7 +177,7 @@ export const GaragePage: React.FC = () => {
                       </div>
                       <div>
                         <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Top Speed</span>
-                        <span className="font-bold text-[#14110f]">{car.topSpeedMph} MPH</span>
+                        <span className="font-bold text-[#14110f] text-[11px] sm:text-xs whitespace-nowrap tracking-tight block">{car.topSpeedMph} MPH / {Math.round(car.topSpeedMph * 1.60934)} KPH</span>
                       </div>
                       <div>
                         <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">0-60 MPH</span>

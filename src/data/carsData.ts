@@ -149,3 +149,17 @@ export const filterCars = (params: FilterParams): Car[] => {
 
   return result;
 };
+
+/**
+ * Format prices:
+ * - Below 1 million: show as 'k' (rounded to nearest integer, e.g. 250k)
+ * - 1 million or above: show as 'm' to the nearest 3 decimal places (stripping redundant trailing zeros, e.g. 1.25m, 1.005m)
+ */
+export const formatCompactPrice = (value: number): string => {
+  if (value < 1000000) {
+    return `${Math.round(value / 1000)}k`;
+  }
+  const millionVal = value / 1000000;
+  return `${parseFloat(millionVal.toFixed(3))}m`;
+};
+

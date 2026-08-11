@@ -5,6 +5,7 @@ import { Flame, ArrowLeft, Zap, Gauge, Cpu, Globe, Sparkles, Compass } from 'luc
 import { getCarById } from '../data/carsData';
 import { GlassButton } from '../components/ui/GlassButton';
 import { useGarageStore } from '../store/useGarageStore';
+import { useDocumentHead } from '../hooks/useDocumentHead';
 
 export const CarDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -35,6 +36,12 @@ export const CarDetailPage: React.FC = () => {
   }
 
   const saved = isSaved(car.id);
+
+  // Car-specific document head
+  useDocumentHead(
+    `${car.year} ${car.brand} ${car.model} — APEX`,
+    `${car.horsepower} hp, ${car.topSpeedMph} mph top speed, $${car.priceUsd.toLocaleString()} MSRP — see the full spec sheet on APEX.`
+  );
 
   // Power to weight ratio in HP per US ton (2,000 lbs)
   const powerToWeightRatio = ((car.horsepower / car.weightLbs) * 2000).toFixed(1);
@@ -67,7 +74,7 @@ export const CarDetailPage: React.FC = () => {
           >
             <img
               src={car.image}
-              alt={`${car.brand} ${car.model}`}
+              alt={`${car.year} ${car.brand} ${car.model}`}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
             />
             {/* Category Tag */}
@@ -112,7 +119,7 @@ export const CarDetailPage: React.FC = () => {
                 </div>
                 <div className="p-3 bg-white/60 rounded border border-black/5">
                   <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Top Speed</span>
-                  <span className="text-xl font-extrabold text-[#14110f]">{car.topSpeedMph} <span className="text-xs font-normal text-neutral-500">MPH</span></span>
+                  <span className="text-xl font-extrabold text-[#14110f]">{car.topSpeedMph} MPH / {Math.round(car.topSpeedMph * 1.60934)} KPH</span>
                 </div>
                 <div className="p-3 bg-white/60 rounded border border-black/5">
                   <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">0-60 MPH Acceleration</span>
@@ -166,7 +173,7 @@ export const CarDetailPage: React.FC = () => {
             </li>
             <li className="flex justify-between items-center py-1 border-b border-black/5">
               <span className="text-neutral-500 uppercase">Top Speed</span>
-              <span className="font-bold text-[#14110f] text-sm">{car.topSpeedMph} MPH</span>
+              <span className="font-bold text-[#14110f] text-sm">{car.topSpeedMph} MPH / {Math.round(car.topSpeedMph * 1.60934)} KPH</span>
             </li>
             <li className="flex justify-between items-center py-1">
               <span className="text-neutral-500 uppercase">Prestige Score</span>

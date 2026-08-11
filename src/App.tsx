@@ -19,6 +19,9 @@ export const App: React.FC = () => {
           <Route path="car/:id" element={<CarDetailPage />} />
           <Route path="bracket" element={<BracketSetupPage />} />
           <Route path="bracket/play" element={<BracketPlayPage />} />
+          {/* :championId enables shareable links */}
+          <Route path="bracket/result/:championId" element={<BracketResultPage />} />
+          {/* Legacy no-param route — redirects to setup */}
           <Route path="bracket/result" element={<BracketResultPage />} />
           <Route path="garage" element={<GaragePage />} />
           <Route path="*" element={<HomePage />} />

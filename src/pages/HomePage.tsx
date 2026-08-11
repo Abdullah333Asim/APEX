@@ -4,9 +4,14 @@ import { Trophy, Compass, Flame, Zap, Bookmark } from 'lucide-react';
 import { GlassButton } from '../components/ui/GlassButton';
 import { allCars } from '../data/carsData';
 import { useGarageStore } from '../store/useGarageStore';
+import { useDocumentHead } from '../hooks/useDocumentHead';
 
 export const HomePage: React.FC = () => {
   const { toggleSave, isSaved } = useGarageStore();
+  useDocumentHead(
+    'APEX — Find Your Ultimate Machine',
+    'Put the world\'s best sports cars, supercars, and hypercars head-to-head in elimination brackets to discover your exact taste profile.'
+  );
 
   // Select 4 showcase cars representing normal, luxury, hyper
   const featuredCars = [
@@ -20,37 +25,26 @@ export const HomePage: React.FC = () => {
     <div className="flex-1 flex flex-col justify-between py-12 lg:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
       {/* Hero Section */}
       <section className="flex flex-col items-center text-center my-auto py-8 lg:py-12">
-        {/* Eyebrow Pill */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-black/5 border border-black/10 backdrop-blur-md mb-8 shadow-sm"
-        >
-          <span className="w-2 h-2 rounded-full bg-[#C63A16] animate-pulse" />
-          <span className="text-[11px] font-mono font-bold tracking-[0.25em] text-[#14110f] uppercase">
-            APEX / AUTOMOTIVE BRACKET
-          </span>
-        </motion.div>
+
 
         {/* Main Headline */}
         <motion.h1
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-[#14110f] tracking-tight uppercase max-w-5xl leading-[1.05]"
+          className="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-[#14110f] tracking-tight uppercase max-w-4xl leading-[1.05]"
         >
-          Pitting Machines Against Machines to Map Your <span className="text-[#C63A16] underline decoration-2 underline-offset-8">Automotive DNA</span>.
+          Find Your{' '}<span className="text-[#C63A16] underline decoration-2 underline-offset-8">Ultimate Machine</span>.
         </motion.h1>
 
-        {/* One-line pitch */}
+        {/* Subheadline */}
         <motion.p
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
           className="mt-6 text-base sm:text-xl text-neutral-600 max-w-2xl font-normal leading-relaxed"
         >
-          An enthusiast-focused elimination engine. Benchmark power, speed, agility, and prestige head-to-head to reveal your definitive taste profile.
+          Put the world's best sports cars, supercars, and hypercars head-to-head in elimination brackets to discover your exact taste profile.
         </motion.p>
 
         {/* Action CTAs */}
@@ -111,7 +105,7 @@ export const HomePage: React.FC = () => {
                 <div className="relative h-44 w-full overflow-hidden bg-neutral-100">
                   <img
                     src={car.image}
-                    alt={`${car.brand} ${car.model}`}
+                    alt={`${car.year} ${car.brand} ${car.model}`}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute top-3 left-3 bg-black/80 backdrop-blur-md px-2.5 py-1 rounded text-[10px] font-mono font-bold tracking-widest uppercase text-white">
@@ -155,8 +149,8 @@ export const HomePage: React.FC = () => {
                       <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">
                         Top Speed
                       </span>
-                      <span className="font-bold text-[#14110f] text-sm">
-                        {car.topSpeedMph} <span className="text-[10px] text-neutral-500 font-normal">MPH</span>
+                      <span className="font-bold text-[#14110f] text-[11px] sm:text-xs whitespace-nowrap tracking-tight block">
+                        {car.topSpeedMph} MPH / {Math.round(car.topSpeedMph * 1.60934)} KPH
                       </span>
                     </div>
                     <div>
@@ -201,7 +195,7 @@ export const HomePage: React.FC = () => {
             HEAD-TO-HEAD BRACKETS
           </h4>
           <p className="text-xs text-neutral-600 leading-relaxed font-normal">
-            8 machines enter. Pick your favorites round-by-round until 1 champion remains.
+            16 machines enter. Pick your favorites round-by-round until 1 champion remains.
           </p>
         </div>
 

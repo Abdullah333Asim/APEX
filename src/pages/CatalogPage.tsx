@@ -1,12 +1,17 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, RotateCcw, Flame, SlidersHorizontal, ArrowUpDown } from 'lucide-react';
-import { allCars, filterCars, getAvailableBrands, getStatRanges, FilterParams } from '../data/carsData';
+import { allCars, filterCars, getAvailableBrands, getStatRanges, FilterParams, formatCompactPrice } from '../data/carsData';
 import { GlassButton } from '../components/ui/GlassButton';
 import { useGarageStore } from '../store/useGarageStore';
+import { useDocumentHead } from '../hooks/useDocumentHead';
 
 export const CatalogPage: React.FC = () => {
   const { isSaved, toggleSave } = useGarageStore();
+  useDocumentHead(
+    'Full Car Catalog — APEX',
+    `Browse and filter ${allCars.length} sports cars, supercars, and hypercars by power, speed, price, and more.`
+  );
 
   // Compute stat bounds across full dataset
   const bounds = useMemo(() => getStatRanges(allCars), []);
@@ -173,7 +178,7 @@ export const CatalogPage: React.FC = () => {
           <div className="flex flex-col gap-1.5">
             <div className="flex justify-between items-center text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-500">
               <span>Price Limit</span>
-              <span className="text-[#C63A16]">Max ${(maxPrice / 1000).toFixed(0)}k</span>
+              <span className="text-[#C63A16]">Max ${formatCompactPrice(maxPrice)}</span>
             </div>
             <input
               type="range"
@@ -262,7 +267,7 @@ export const CatalogPage: React.FC = () => {
                   <div className="relative h-48 w-full overflow-hidden bg-neutral-100">
                     <img
                       src={car.image}
-                      alt={`${car.brand} ${car.model}`}
+                      alt={`${car.year} ${car.brand} ${car.model}`}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute top-3 left-3 bg-black/80 backdrop-blur-md px-2.5 py-1 rounded text-[10px] font-mono font-bold tracking-widest uppercase text-white">
@@ -300,7 +305,7 @@ export const CatalogPage: React.FC = () => {
                       </div>
                       <div>
                         <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Top Speed</span>
-                        <span className="font-bold text-[#14110f]">{car.topSpeedMph} MPH</span>
+                        <span className="font-bold text-[#14110f] text-[11px] sm:text-xs whitespace-nowrap tracking-tight block">{car.topSpeedMph} MPH / {Math.round(car.topSpeedMph * 1.60934)} KPH</span>
                       </div>
                       <div>
                         <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">0-60 MPH</span>

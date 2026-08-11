@@ -6,6 +6,8 @@ interface Particle {
   vx: number;
   vy: number;
   size: number;
+  angle: number;
+  rotSpeed: number;
 }
 
 export const DiffractionField: React.FC = () => {
@@ -39,12 +41,15 @@ export const DiffractionField: React.FC = () => {
       // Re-init particles if empty
       if (particles.length === 0) {
         for (let i = 0; i < COUNT; i++) {
+          const isRotating = Math.random() > 0.35; // ~65% of spikes rotate
           particles.push({
             x: Math.random() * w,
             y: Math.random() * h,
             vx: (Math.random() - 0.5) * 0.12,
             vy: (Math.random() - 0.5) * 0.12,
-            size: 3 + Math.random() * 6
+            size: 3 + Math.random() * 6,
+            angle: Math.random() * Math.PI * 2,
+            rotSpeed: isRotating ? (Math.random() - 0.5) * 0.012 : 0,
           });
         }
       }
@@ -53,20 +58,26 @@ export const DiffractionField: React.FC = () => {
     window.addEventListener('resize', resize);
     resize();
 
-    const drawSpike = (x: number, y: number, s: number) => {
+    const drawSpike = (x: number, y: number, s: number, angle: number) => {
       const arm = s * 0.14;
+      ctx.save();
+      ctx.translate(x, y);
+      if (angle !== 0) {
+        ctx.rotate(angle);
+      }
       ctx.beginPath();
-      ctx.moveTo(x, y - s);
-      ctx.lineTo(x + arm, y);
-      ctx.lineTo(x, y + s);
-      ctx.lineTo(x - arm, y);
+      ctx.moveTo(0, -s);
+      ctx.lineTo(arm, 0);
+      ctx.lineTo(0, s);
+      ctx.lineTo(-arm, 0);
       ctx.closePath();
-      ctx.moveTo(x - s, y);
-      ctx.lineTo(x, y - arm);
-      ctx.lineTo(x + s, y);
-      ctx.lineTo(x, y + arm);
+      ctx.moveTo(-s, 0);
+      ctx.lineTo(0, -arm);
+      ctx.lineTo(s, 0);
+      ctx.lineTo(0, arm);
       ctx.closePath();
       ctx.fill();
+      ctx.restore();
     };
 
     const tick = () => {
@@ -75,6 +86,9 @@ export const DiffractionField: React.FC = () => {
       for (const p of particles) {
         p.x += p.vx;
         p.y += p.vy;
+        if (p.rotSpeed !== 0) {
+          p.angle += p.rotSpeed;
+        }
         if (p.x < -20) p.x = w + 20;
         if (p.x > w + 20) p.x = -20;
         if (p.y < -20) p.y = h + 20;
@@ -101,7 +115,7 @@ export const DiffractionField: React.FC = () => {
 
       ctx.fillStyle = 'rgba(0,0,0,0.55)';
       for (const p of particles) {
-        drawSpike(p.x, p.y, p.size);
+        drawSpike(p.x, p.y, p.size, p.angle);
       }
 
       animationFrameId = requestAnimationFrame(tick);
