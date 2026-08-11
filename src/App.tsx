@@ -8,6 +8,7 @@ import { BracketSetupPage } from './pages/BracketSetupPage';
 import { BracketPlayPage } from './pages/BracketPlayPage';
 import { BracketResultPage } from './pages/BracketResultPage';
 import { GaragePage } from './pages/GaragePage';
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 export const App: React.FC = () => {
   return (
