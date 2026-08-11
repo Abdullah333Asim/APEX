@@ -36,25 +36,26 @@ export const Navbar: React.FC = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`relative px-4 py-2 rounded-sm text-xs font-semibold uppercase tracking-widest transition-all duration-200 flex items-center gap-2 ${
+                title={item.label}
+                className={`relative px-2.5 sm:px-4 py-2 rounded-sm text-xs font-semibold uppercase tracking-widest transition-all duration-200 flex items-center gap-1.5 sm:gap-2 ${
                   isActive
                     ? 'text-[#14110f] bg-black/5 font-bold'
                     : 'text-neutral-600 hover:text-[#14110f] hover:bg-black/5'
                 }`}
               >
                 {item.icon}
-                <span>{item.label}</span>
+                <span className="hidden sm:inline">{item.label}</span>
 
                 {/* Saved Badge */}
                 {item.badge !== undefined && (
-                  <span className="ml-1 px-1.5 py-0.5 text-[10px] font-mono font-bold bg-[#C63A16] text-white rounded-full min-w-[18px] text-center shadow-sm animate-pulse">
+                  <span className="ml-0.5 sm:ml-1 px-1.5 py-0.5 text-[10px] font-mono font-bold bg-[#C63A16] text-white rounded-full min-w-[18px] text-center shadow-sm animate-pulse">
                     {item.badge}
                   </span>
                 )}
 
                 {/* Active Indicator Line */}
                 {isActive && (
-                  <span className="absolute bottom-0 left-3 right-3 h-[2px] bg-[#C63A16]" />
+                  <span className="absolute bottom-0 left-2 right-2 sm:left-3 sm:right-3 h-[2px] bg-[#C63A16]" />
                 )}
               </Link>
             );
