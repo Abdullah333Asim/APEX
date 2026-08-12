@@ -130,9 +130,9 @@ function escAttr(str) {
 }
 
 // Resolve a car's local image to an absolute URL for OG tags.
-// If the image path starts with /cars/ it lives in public/, else use social card.
+// If the image path starts with /cars/ or /f1/ it lives in public/, else use social card.
 function ogImageUrl(car) {
-  if (car.image && car.image.startsWith('/cars/')) {
+  if (car.image && (car.image.startsWith('/cars/') || car.image.startsWith('/f1/'))) {
     return `${SITE_URL}${car.image}`;
   }
   return `${SITE_URL}/social-card.png`;
