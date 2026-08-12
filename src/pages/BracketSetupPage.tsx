@@ -30,7 +30,7 @@ export const BracketSetupPage: React.FC = () => {
       avgPrice: '$32k - $72k',
       examples: 'Toyota GR Supra, Civic Type R, Golf R, Mustang GT, WRX STI',
       description: 'Pure driver involvement, sharp chassis tuning, and accessible street performance.',
-      image: '/public/cars/toyota-gr-supra-30-2024.jpg',
+      image: '/cars/toyota-gr-supra-30-2024.jpg',
       accentBg: 'hover:border-[#14110f]',
     },
     {
@@ -43,7 +43,7 @@ export const BracketSetupPage: React.FC = () => {
       avgPrice: '$85k - $340k',
       examples: 'Porsche 911 GT3 RS, BMW M5 CS, AMG GT, Audi R8, Lexus LFA',
       description: 'Uncompromising engineering, intoxicating soundtracks, and track-honed luxury.',
-      image: '/public/cars/porsche-911-gt3-rs-2024.jpg',
+      image: '/cars/porsche-911-gt3-rs-2024.jpg',
       accentBg: 'hover:border-[#C63A16]',
       featured: true,
     },
@@ -57,7 +57,7 @@ export const BracketSetupPage: React.FC = () => {
       avgPrice: '$1.0M - $4.1M',
       examples: 'Bugatti Chiron, Jesko Attack, Huayra BC, Rimac Nevera, Valkyrie',
       description: 'Physical boundaries shattered. Multi-million dollar aerodynamics, W16/V16 monsters, and hyper electrics.',
-      image: '/public/cars/koenigsegg-jesko-attack-2023.jpg',
+      image: '/cars/koenigsegg-jesko-attack-2023.jpg',
       accentBg: 'hover:border-[#14110f]',
     },
     {
@@ -70,7 +70,7 @@ export const BracketSetupPage: React.FC = () => {
       avgPrice: '$12.0M - $18.0M',
       examples: 'Ferrari F2004, Mercedes W11, Brawn BGP 001, Red Bull RB19',
       description: 'The absolute pinnacle of motorsport engineering. Open-wheel monocoques, 15,000 RPM ceilings, and hyper-advanced aerodynamic downforce.',
-      image: '/public/f1/renault-r25-2005.jpg',
+      image: '/f1/renault-r25-2005.jpg',
       accentBg: 'hover:border-[#C63A16]',
     },
   ];
