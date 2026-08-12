@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Trophy, Flame, Swords, CheckCircle2, Info, X } from 'lucide-react';
@@ -343,8 +344,8 @@ const CarSpecsModal: React.FC<CarSpecsModalProps> = ({ car, onClose, onSelectCar
     ? 'LUXURY DIVISION'
     : 'TUNER / SPORT DIVISION';
 
-  return (
-    <div className="fixed inset-0 z-[100] bg-[#f7f5f2] overflow-y-auto flex flex-col text-[#14110f]">
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] bg-[#f7f5f2] overflow-y-auto flex flex-col text-[#14110f]">
       {/* Header Bar — covers site navbar completely */}
       <div className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-black/10 shadow-sm px-4 sm:px-8 py-4">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
@@ -373,7 +374,7 @@ const CarSpecsModal: React.FC<CarSpecsModalProps> = ({ car, onClose, onSelectCar
       </div>
 
       {/* Main Spec Content Container */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-8 py-8 w-full flex-1 space-y-8">
+      <div className="max-w-5xl mx-auto px-4 sm:px-8 py-8 w-full flex-1 space-y-8 pb-24">
         {/* Top Hero Section */}
         <div className="bg-white rounded-sm border border-black/10 shadow-sm p-6 sm:p-8 flex flex-col md:flex-row gap-8 items-start">
           <div className="relative h-64 sm:h-80 w-full md:w-1/2 rounded-sm overflow-hidden bg-neutral-100 border border-black/10 flex-shrink-0">
@@ -501,7 +502,7 @@ const CarSpecsModal: React.FC<CarSpecsModalProps> = ({ car, onClose, onSelectCar
       </div>
 
       {/* Sticky Action Footer */}
-      <div className="sticky bottom-0 z-30 bg-white/90 backdrop-blur-md border-t border-black/10 px-4 sm:px-8 py-4 shadow-lg">
+      <div className="sticky bottom-0 z-30 bg-white/95 backdrop-blur-md border-t border-black/10 px-4 sm:px-8 py-4 shadow-lg pb-[calc(1rem+env(safe-area-inset-bottom))]">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row gap-4 items-center justify-between">
           <div className="text-xs font-mono text-neutral-500 hidden sm:block">
             Reviewing <strong className="text-[#14110f]">{car.year} {car.brand} {car.model}</strong>
@@ -528,6 +529,7 @@ const CarSpecsModal: React.FC<CarSpecsModalProps> = ({ car, onClose, onSelectCar
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

@@ -35,17 +35,19 @@ export const Layout: React.FC = () => {
       {/* Global Toast Notifications */}
       <Toast />
 
-      {/* Footer */}
-      <footer className="relative z-10 border-t border-black/10 bg-white/50 backdrop-blur-sm py-8 text-center text-xs tracking-widest uppercase text-neutral-500 font-mono">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div>APEX Automotive &copy; {new Date().getFullYear()}</div>
-          <div className="flex items-center gap-6">
-            <span>Precision Specs</span>
-            <span className="text-[#C63A16]">&bull;</span>
-            <span>Car Catalog & Elimination Bracket</span>
+      {/* Footer (hidden on /bracket/play to keep elimination bracket clean) */}
+      {location.pathname !== '/bracket/play' && (
+        <footer className="relative z-10 border-t border-black/10 bg-white/50 backdrop-blur-sm py-8 text-center text-xs tracking-widest uppercase text-neutral-500 font-mono">
+          <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>APEX Automotive &copy; {new Date().getFullYear()}</div>
+            <div className="flex items-center gap-6">
+              <span>Precision Specs</span>
+              <span className="text-[#C63A16]">&bull;</span>
+              <span>Car Catalog & Elimination Bracket</span>
+            </div>
           </div>
-        </div>
-      </footer>
+        </footer>
+      )}
     </div>
   );
 };
