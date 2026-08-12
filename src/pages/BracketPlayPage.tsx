@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Trophy, Flame, Swords, CheckCircle2 } from 'lucide-react';
+import { Trophy, Flame, Swords, CheckCircle2, Info, X } from 'lucide-react';
 import { useBracketStore } from '../store/useBracketStore';
 import { GlassButton } from '../components/ui/GlassButton';
 import { Car } from '../types/car';
@@ -23,6 +23,8 @@ export const BracketPlayPage: React.FC = () => {
   } = useBracketStore();
 
   const [animatingWinnerId, setAnimatingWinnerId] = useState<string | null>(null);
+  const [selectedSpecsCar, setSelectedSpecsCar] = useState<Car | null>(null);
+
   useDocumentHead(
     'Tournament in Progress — APEX',
     'An elimination bracket is underway. Pick your favourite machine in each head-to-head matchup.'
@@ -113,14 +115,14 @@ export const BracketPlayPage: React.FC = () => {
           })}
         </div>
         <span className="text-[10px] font-mono text-neutral-400 mt-2 uppercase tracking-widest">
-          Match {globalStep} of {TOTAL_MATCHES} &bull; Tap a car to advance
+          Match {globalStep} of {TOTAL_MATCHES} &bull; Tap "Select" on a car to advance
         </span>
       </div>
 
       {/* Head-to-Head Split View */}
       <div className="relative my-auto py-4">
-        {/* VS Badge Floating Center */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 hidden md:flex w-14 h-14 rounded-full bg-[#14110f] text-white border-2 border-white shadow-2xl items-center justify-center font-extrabold font-mono text-lg tracking-widest">
+        {/* VS Badge Floating Center (visible on both mobile and desktop) */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex w-12 h-12 md:w-16 md:h-16 rounded-full bg-[#14110f] text-white border-2 border-[#C63A16] shadow-2xl shadow-[#C63A16]/30 items-center justify-center font-extrabold font-mono text-sm md:text-xl tracking-widest ring-4 ring-white pointer-events-none">
           VS
         </div>
 
@@ -131,13 +133,14 @@ export const BracketPlayPage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -15 }}
             transition={{ duration: 0.3 }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-10"
+            className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-6 lg:gap-10"
           >
             <CompetitorCard
               car={carA}
               isWinner={animatingWinnerId === carA.id}
               isLoser={animatingWinnerId === carB.id}
               onSelect={() => handlePick(carA.id)}
+              onOpenSpecs={() => setSelectedSpecsCar(carA)}
               disabled={!!animatingWinnerId}
               align="left"
             />
@@ -146,6 +149,7 @@ export const BracketPlayPage: React.FC = () => {
               isWinner={animatingWinnerId === carB.id}
               isLoser={animatingWinnerId === carA.id}
               onSelect={() => handlePick(carB.id)}
+              onOpenSpecs={() => setSelectedSpecsCar(carB)}
               disabled={!!animatingWinnerId}
               align="right"
             />
@@ -155,8 +159,19 @@ export const BracketPlayPage: React.FC = () => {
 
       {/* Bottom Hint */}
       <div className="mt-8 text-center text-xs font-mono text-neutral-400 uppercase tracking-widest">
-        Compare Horsepower, Top Speed &amp; MSRP &bull; Winner Advances to Next Round
+        Click "View Specs" to inspect full stats &bull; Click "Select" to advance machine
       </div>
+
+      {/* Car Full Specs Popup Modal */}
+      <AnimatePresence>
+        {selectedSpecsCar && (
+          <CarSpecsModal
+            car={selectedSpecsCar}
+            onClose={() => setSelectedSpecsCar(null)}
+            onSelectCar={(id) => handlePick(id)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
@@ -166,6 +181,7 @@ interface CompetitorCardProps {
   isWinner: boolean;
   isLoser: boolean;
   onSelect: () => void;
+  onOpenSpecs: () => void;
   disabled: boolean;
   align: 'left' | 'right';
 }
@@ -175,6 +191,7 @@ const CompetitorCard: React.FC<CompetitorCardProps> = ({
   isWinner,
   isLoser,
   onSelect,
+  onOpenSpecs,
   disabled,
   align,
 }) => {
@@ -186,7 +203,7 @@ const CompetitorCard: React.FC<CompetitorCardProps> = ({
         x: isLoser ? (align === 'left' ? -60 : 60) : 0,
       }}
       transition={{ duration: 0.4 }}
-      onClick={onSelect}
+      onClick={onOpenSpecs}
       className={`glass-panel group relative rounded-sm overflow-hidden border transition-all duration-300 cursor-pointer flex flex-col justify-between ${
         isWinner
           ? 'border-[#C63A16] shadow-2xl ring-2 ring-[#C63A16]/50 bg-white'
@@ -206,18 +223,33 @@ const CompetitorCard: React.FC<CompetitorCardProps> = ({
           alt={`${car.year} ${car.brand} ${car.model}`}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
+
+        {/* View Specs Overlay Button */}
+        {!isWinner && (
+          <div className="absolute top-4 left-4 z-20 px-3 py-1.5 rounded bg-black/80 text-white backdrop-blur-md text-xs font-mono font-bold flex items-center gap-1.5 shadow border border-white/20">
+            <Info className="w-3.5 h-3.5 text-[#C63A16]" />
+            <span>Tap Card for Full Specs</span>
+          </div>
+        )}
+
         <div className="absolute top-4 right-4 bg-black/85 backdrop-blur-md px-3 py-1 rounded text-[10px] font-mono font-bold tracking-widest uppercase text-white">
           {car.country}
         </div>
         <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded text-xs font-mono font-extrabold text-[#C63A16]">
-          ${car.priceUsd.toLocaleString()}
+          {car.priceUsd !== null ? `$${car.priceUsd.toLocaleString()}` : 'MSRP: N/A'}
         </div>
       </div>
 
       <div className="p-6 flex-1 flex flex-col justify-between">
         <div>
-          <div className="text-xs font-mono uppercase tracking-widest text-neutral-500">
-            {car.brand} &bull; {car.year}
+          <div className="flex items-center justify-between">
+            <div className="text-xs font-mono uppercase tracking-widest text-neutral-500">
+              {car.brand} &bull; {car.year}
+            </div>
+            <span className="text-[11px] font-mono font-bold text-[#C63A16] flex items-center gap-1">
+              <Info className="w-3 h-3" />
+              <span>Full Specs</span>
+            </span>
           </div>
           <h3 className="text-2xl font-extrabold text-[#14110f] uppercase tracking-tight mt-0.5 font-sans">
             {car.model}
@@ -236,17 +268,39 @@ const CompetitorCard: React.FC<CompetitorCardProps> = ({
             <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Top Speed</span>
             <span className="text-lg font-extrabold text-[#14110f]">{car.topSpeedMph} MPH / {Math.round(car.topSpeedMph * 1.60934)} KPH</span>
           </div>
-          <div className="p-2.5 bg-black/5 rounded">
-            <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">0–60 MPH</span>
-            <span className="text-lg font-extrabold text-[#14110f]">{car.zeroToSixtyS}s</span>
-          </div>
-          <div className="p-2.5 bg-black/5 rounded">
-            <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Engine Type</span>
-            <span className="text-xs font-bold text-[#14110f] truncate block">{car.engine.type}</span>
-          </div>
+          {car.category === 'f1' ? (
+            <>
+              <div className="p-2.5 bg-black/5 rounded">
+                <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Engine Type</span>
+                <span className="text-xs font-bold text-[#14110f] truncate block" title={car.engine.type}>{car.engine.type}</span>
+              </div>
+              <div className="p-2.5 bg-black/5 rounded">
+                <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Weight</span>
+                <span className="text-xs font-bold text-[#C63A16] block tracking-tighter truncate">
+                  {car.weightLbs.toLocaleString()} lbs / {Math.round(car.weightLbs * 0.45359237)} kg
+                </span>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="p-2.5 bg-black/5 rounded">
+                <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">0–60 MPH</span>
+                <span className="text-lg font-extrabold text-[#14110f]">{car.zeroToSixtyS !== null ? `${car.zeroToSixtyS}s` : 'N/A'}</span>
+              </div>
+              <div className="p-2.5 bg-black/5 rounded">
+                <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Engine Type</span>
+                <span className="text-xs font-bold text-[#14110f] truncate block" title={car.engine.type}>{car.engine.type}</span>
+              </div>
+            </>
+          )}
         </div>
 
+        {/* Selection ONLY happens when clicking this button */}
         <GlassButton
+          onClick={(e) => {
+            e.stopPropagation();
+            onSelect();
+          }}
           variant={isWinner ? 'primary' : 'secondary'}
           className="w-full text-xs py-3"
           icon={<Flame className="w-4 h-4 text-[#C63A16]" />}
@@ -255,5 +309,225 @@ const CompetitorCard: React.FC<CompetitorCardProps> = ({
         </GlassButton>
       </div>
     </motion.div>
+  );
+};
+
+// ─── Car Specs Modal Popup ──────────────────────────────────────────────────
+interface CarSpecsModalProps {
+  car: Car | null;
+  onClose: () => void;
+  onSelectCar: (carId: string) => void;
+}
+
+const CarSpecsModal: React.FC<CarSpecsModalProps> = ({ car, onClose, onSelectCar }) => {
+  useEffect(() => {
+    if (car) {
+      document.body.style.overflow = 'hidden';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [car]);
+
+  if (!car) return null;
+
+  const powerToWeightRatio = car.horsepower && car.weightLbs
+    ? ((car.horsepower / car.weightLbs) * 2000).toFixed(1)
+    : 'N/A';
+
+  const categoryLabel = car.category === 'f1'
+    ? 'FORMULA 1 DIVISION'
+    : car.category === 'hyper'
+    ? 'HYPERCAR DIVISION'
+    : car.category === 'luxury'
+    ? 'LUXURY DIVISION'
+    : 'TUNER / SPORT DIVISION';
+
+  return (
+    <div className="fixed inset-0 z-[100] bg-[#f7f5f2] overflow-y-auto flex flex-col text-[#14110f]">
+      {/* Header Bar — covers site navbar completely */}
+      <div className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-black/10 shadow-sm px-4 sm:px-8 py-4">
+        <div className="max-w-5xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded bg-[#C63A16]/10 text-[#C63A16] flex items-center justify-center">
+              <Info className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#C63A16]">
+                FULL SPECIFICATION SHEET
+              </div>
+              <h2 className="text-base sm:text-lg font-extrabold uppercase tracking-tight text-[#14110f]">
+                {car.year} {car.brand} {car.model}
+              </h2>
+            </div>
+          </div>
+
+          <button
+            onClick={onClose}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/5 hover:bg-black/10 text-neutral-800 text-xs font-mono font-bold transition-colors border border-black/10"
+          >
+            <span>Close</span>
+            <X className="w-4 h-4 text-[#C63A16]" />
+          </button>
+        </div>
+      </div>
+
+      {/* Main Spec Content Container */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-8 py-8 w-full flex-1 space-y-8">
+        {/* Top Hero Section */}
+        <div className="bg-white rounded-sm border border-black/10 shadow-sm p-6 sm:p-8 flex flex-col md:flex-row gap-8 items-start">
+          <div className="relative h-64 sm:h-80 w-full md:w-1/2 rounded-sm overflow-hidden bg-neutral-100 border border-black/10 flex-shrink-0">
+            <img
+              src={car.image}
+              alt={`${car.year} ${car.brand} ${car.model}`}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute top-3 left-3 bg-[#C63A16] text-white px-3 py-1 rounded text-[10px] font-mono font-bold uppercase tracking-widest shadow">
+              {categoryLabel}
+            </div>
+            <div className="absolute top-3 right-3 bg-black/85 text-white backdrop-blur-md px-3 py-1 rounded text-[10px] font-mono font-bold uppercase tracking-widest shadow">
+              {car.country}
+            </div>
+            <div className="absolute bottom-3 left-3 bg-white/95 text-[#C63A16] backdrop-blur-md px-3 py-1.5 rounded text-xs font-mono font-extrabold shadow">
+              {car.priceUsd !== null ? `MSRP $${car.priceUsd.toLocaleString()}` : 'MSRP: N/A (Race Spec)'}
+            </div>
+          </div>
+
+          <div className="flex-1 flex flex-col justify-between h-full">
+            <div>
+              <div className="text-xs font-mono font-bold uppercase tracking-widest text-[#C63A16]">
+                {car.brand} &bull; {car.year} &bull; {car.country}
+              </div>
+              <h1 className="text-3xl sm:text-4xl font-extrabold uppercase text-[#14110f] tracking-tight font-sans mt-1">
+                {car.model}
+              </h1>
+              <p className="text-sm text-neutral-600 mt-4 leading-relaxed font-normal">
+                {car.blurb}
+              </p>
+            </div>
+
+            <div className="mt-6 pt-6 border-t border-black/10 flex flex-wrap gap-4">
+              <div className="flex-1 min-w-[140px] p-3 bg-[#f7f5f2] rounded border border-black/5">
+                <span className="text-[10px] font-mono text-neutral-500 uppercase tracking-wider block">Peak Output</span>
+                <span className="text-xl font-extrabold text-[#14110f] font-mono">{car.horsepower} HP</span>
+              </div>
+              <div className="flex-1 min-w-[140px] p-3 bg-[#f7f5f2] rounded border border-black/5">
+                <span className="text-[10px] font-mono text-neutral-500 uppercase tracking-wider block">Top Velocity</span>
+                <span className="text-xl font-extrabold text-[#14110f] font-mono">{car.topSpeedMph} MPH</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* All Available Specs Matrix */}
+        <div>
+          <div className="text-xs font-mono font-extrabold uppercase tracking-widest text-[#C63A16] mb-3 flex items-center gap-2">
+            <span>COMPLETE TECHNICAL DATA MATRIX</span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 font-mono text-xs">
+            {/* Spec Card 1: Power */}
+            <div className="bg-white p-4 rounded-sm border border-black/10 shadow-sm">
+              <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-bold">Horsepower Rating</span>
+              <span className="text-2xl font-extrabold text-[#14110f] mt-1 block">{car.horsepower} <span className="text-xs font-normal text-neutral-500">HP</span></span>
+              <span className="text-[11px] text-neutral-500 mt-1 block">Total engine power output</span>
+            </div>
+
+            {/* Spec Card 2: Top Speed */}
+            <div className="bg-white p-4 rounded-sm border border-black/10 shadow-sm">
+              <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-bold">Top Speed</span>
+              <span className="text-2xl font-extrabold text-[#14110f] mt-1 block">{car.topSpeedMph} <span className="text-xs font-normal text-neutral-500">MPH</span></span>
+              <span className="text-[11px] text-[#C63A16] font-bold mt-1 block">{Math.round(car.topSpeedMph * 1.60934)} KPH</span>
+            </div>
+
+            {/* Spec Card 3: Acceleration / 0-60 */}
+            <div className="bg-white p-4 rounded-sm border border-black/10 shadow-sm">
+              <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-bold">0–60 MPH Sprint</span>
+              <span className="text-2xl font-extrabold text-[#14110f] mt-1 block">
+                {car.zeroToSixtyS !== null ? `${car.zeroToSixtyS}s` : 'N/A'}
+              </span>
+              <span className="text-[11px] text-neutral-500 mt-1 block">Standing launch time</span>
+            </div>
+
+            {/* Spec Card 4: Torque */}
+            <div className="bg-white p-4 rounded-sm border border-black/10 shadow-sm">
+              <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-bold">Peak Torque</span>
+              <span className="text-2xl font-extrabold text-[#14110f] mt-1 block">
+                {car.torqueLbFt !== null ? `${car.torqueLbFt} lb-ft` : 'N/A'}
+              </span>
+              <span className="text-[11px] text-neutral-500 mt-1 block">Rotational engine force</span>
+            </div>
+
+            {/* Spec Card 5: Curb Weight */}
+            <div className="bg-white p-4 rounded-sm border border-black/10 shadow-sm">
+              <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-bold">Curb Weight</span>
+              <span className="text-2xl font-extrabold text-[#14110f] mt-1 block">{car.weightLbs.toLocaleString()} <span className="text-xs font-normal text-neutral-500">lbs</span></span>
+              <span className="text-[11px] text-[#C63A16] font-bold mt-1 block">{Math.round(car.weightLbs * 0.45359237).toLocaleString()} kg</span>
+            </div>
+
+            {/* Spec Card 6: Power to Weight */}
+            <div className="bg-white p-4 rounded-sm border border-black/10 shadow-sm">
+              <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-bold">Power-to-Weight Ratio</span>
+              <span className="text-2xl font-extrabold text-[#14110f] mt-1 block">{powerToWeightRatio} <span className="text-xs font-normal text-neutral-500">HP/ton</span></span>
+              <span className="text-[11px] text-neutral-500 mt-1 block">HP per 2,000 lbs vehicle mass</span>
+            </div>
+
+            {/* Spec Card 7: Engine Layout */}
+            <div className="bg-white p-4 rounded-sm border border-black/10 shadow-sm col-span-1 sm:col-span-2 lg:col-span-1">
+              <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-bold">Engine Configuration</span>
+              <span className="text-base font-extrabold text-[#14110f] mt-1 block truncate" title={car.engine.type}>{car.engine.type}</span>
+              <span className="text-[11px] text-neutral-500 mt-1 block">Powerplant architecture</span>
+            </div>
+
+            {/* Spec Card 8: Engine Displacement & Cylinders */}
+            <div className="bg-white p-4 rounded-sm border border-black/10 shadow-sm">
+              <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-bold">Displacement & Cylinders</span>
+              <span className="text-base font-extrabold text-[#14110f] mt-1 block">
+                {car.engine.displacementL ? `${car.engine.displacementL} Liters` : 'N/A'} ({car.engine.cylinders} Cyl)
+              </span>
+              <span className="text-[11px] text-neutral-500 mt-1 block">Engine capacity & cylinder count</span>
+            </div>
+
+            {/* Spec Card 9: Price & Division */}
+            <div className="bg-white p-4 rounded-sm border border-black/10 shadow-sm">
+              <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-bold">Original MSRP & Division</span>
+              <span className="text-base font-extrabold text-[#C63A16] mt-1 block">
+                {car.priceUsd !== null ? `$${car.priceUsd.toLocaleString()}` : 'N/A (Race Spec)'}
+              </span>
+              <span className="text-[11px] text-neutral-500 mt-1 block">{categoryLabel}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Sticky Action Footer */}
+      <div className="sticky bottom-0 z-30 bg-white/90 backdrop-blur-md border-t border-black/10 px-4 sm:px-8 py-4 shadow-lg">
+        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row gap-4 items-center justify-between">
+          <div className="text-xs font-mono text-neutral-500 hidden sm:block">
+            Reviewing <strong className="text-[#14110f]">{car.year} {car.brand} {car.model}</strong>
+          </div>
+          <div className="flex gap-3 w-full sm:w-auto">
+            <GlassButton
+              onClick={onClose}
+              variant="secondary"
+              className="flex-1 sm:flex-initial text-xs py-3 px-6"
+            >
+              Close Spec Sheet
+            </GlassButton>
+            <GlassButton
+              onClick={() => {
+                onClose();
+                onSelectCar(car.id);
+              }}
+              variant="primary"
+              className="flex-1 sm:flex-initial text-xs py-3 px-8"
+              icon={<Flame className="w-4 h-4 text-[#C63A16]" />}
+            >
+              Select {car.model} as Winner
+            </GlassButton>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };

@@ -158,7 +158,7 @@ export const HomePage: React.FC = () => {
                         0-60 MPH
                       </span>
                       <span className="font-bold text-[#14110f] text-sm">
-                        {car.zeroToSixtyS}s
+                        {car.zeroToSixtyS !== null ? `${car.zeroToSixtyS}s` : 'N/A'}
                       </span>
                     </div>
                     <div>
@@ -166,7 +166,7 @@ export const HomePage: React.FC = () => {
                         MSRP
                       </span>
                       <span className="font-bold text-[#C63A16] text-sm">
-                        ${car.priceUsd.toLocaleString()}
+                        {car.priceUsd !== null ? `$${car.priceUsd.toLocaleString()}` : 'N/A'}
                       </span>
                     </div>
                   </div>
@@ -185,39 +185,44 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Feature Cards Grid */}
       <section className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 pt-10 border-t border-black/10">
         <div className="glass-panel p-6 rounded-sm">
-          <div className="w-10 h-10 rounded bg-[#C63A16]/10 text-[#C63A16] flex items-center justify-center mb-4">
-            <Trophy className="w-5 h-5" />
+          <div className="flex items-center gap-3.5 mb-4">
+            <div className="w-10 h-10 rounded bg-[#C63A16]/10 text-[#C63A16] flex items-center justify-center shrink-0">
+              <Trophy className="w-5 h-5" />
+            </div>
+            <h4 className="font-extrabold uppercase text-[#14110f] tracking-wide font-sans leading-none">
+              HEAD-TO-HEAD BRACKETS
+            </h4>
           </div>
-          <h4 className="font-extrabold uppercase text-[#14110f] tracking-wide mb-1 font-sans">
-            HEAD-TO-HEAD BRACKETS
-          </h4>
           <p className="text-xs text-neutral-600 leading-relaxed font-normal">
             16 machines enter. Pick your favorites round-by-round until 1 champion remains.
           </p>
         </div>
 
         <div className="glass-panel p-6 rounded-sm">
-          <div className="w-10 h-10 rounded bg-black/5 text-[#14110f] flex items-center justify-center mb-4">
-            <Zap className="w-5 h-5" />
+          <div className="flex items-center gap-3.5 mb-4">
+            <div className="w-10 h-10 rounded bg-black/5 text-[#14110f] flex items-center justify-center shrink-0">
+              <Zap className="w-5 h-5" />
+            </div>
+            <h4 className="font-extrabold uppercase text-[#14110f] tracking-wide font-sans leading-none">
+              YOUR TASTE PROFILE
+            </h4>
           </div>
-          <h4 className="font-extrabold uppercase text-[#14110f] tracking-wide mb-1 font-sans">
-            YOUR TASTE PROFILE
-          </h4>
           <p className="text-xs text-neutral-600 leading-relaxed font-normal">
             Map what you actually value in a machine—from raw power to agile handling.
           </p>
         </div>
 
         <div className="glass-panel p-6 rounded-sm">
-          <div className="w-10 h-10 rounded bg-black/5 text-[#14110f] flex items-center justify-center mb-4">
-            <Bookmark className="w-5 h-5" />
+          <div className="flex items-center gap-3.5 mb-4">
+            <div className="w-10 h-10 rounded bg-black/5 text-[#14110f] flex items-center justify-center shrink-0">
+              <Bookmark className="w-5 h-5" />
+            </div>
+            <h4 className="font-extrabold uppercase text-[#14110f] tracking-wide font-sans leading-none">
+              YOUR GARAGE
+            </h4>
           </div>
-          <h4 className="font-extrabold uppercase text-[#14110f] tracking-wide mb-1 font-sans">
-            YOUR GARAGE
-          </h4>
           <p className="text-xs text-neutral-600 leading-relaxed font-normal">
             Save your favorite builds directly to your browser. No account required.
           </p>

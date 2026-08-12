@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Trophy, Zap, Crown, Flame, Shield, ArrowRight } from 'lucide-react';
+import { Trophy, Zap, Crown, Flame, Shield, ArrowRight ,Battery} from 'lucide-react';
 import { useBracketStore, BracketCategory } from '../store/useBracketStore';
 import { GlassButton } from '../components/ui/GlassButton';
 import { useDocumentHead } from '../hooks/useDocumentHead';
@@ -30,7 +30,7 @@ export const BracketSetupPage: React.FC = () => {
       avgPrice: '$32k - $72k',
       examples: 'Toyota GR Supra, Civic Type R, Golf R, Mustang GT, WRX STI',
       description: 'Pure driver involvement, sharp chassis tuning, and accessible street performance.',
-      image: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?q=80&w=1000&auto=format&fit=crop',
+      image: '/public/cars/toyota-gr-supra-30-2024.jpg',
       accentBg: 'hover:border-[#14110f]',
     },
     {
@@ -43,7 +43,7 @@ export const BracketSetupPage: React.FC = () => {
       avgPrice: '$85k - $340k',
       examples: 'Porsche 911 GT3 RS, BMW M5 CS, AMG GT, Audi R8, Lexus LFA',
       description: 'Uncompromising engineering, intoxicating soundtracks, and track-honed luxury.',
-      image: 'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?q=80&w=1000&auto=format&fit=crop',
+      image: '/public/cars/porsche-911-gt3-rs-2024.jpg',
       accentBg: 'hover:border-[#C63A16]',
       featured: true,
     },
@@ -52,13 +52,26 @@ export const BracketSetupPage: React.FC = () => {
       title: 'Hyper Division',
       subtitle: 'Halo Megacars, Holy Trinity & V16 Weapons',
       badge: '22 Machines',
-      icon: <Crown className="w-6 h-6 text-[#14110f]" />,
+      icon: <Crown className="w-6 h-6 text-[#f0cf13]" />,
       avgHp: '~1,350 HP',
       avgPrice: '$1.0M - $4.1M',
       examples: 'Bugatti Chiron, Jesko Attack, Huayra BC, Rimac Nevera, Valkyrie',
       description: 'Physical boundaries shattered. Multi-million dollar aerodynamics, W16/V16 monsters, and hyper electrics.',
-      image: 'https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?q=80&w=1000&auto=format&fit=crop',
+      image: '/public/cars/koenigsegg-jesko-attack-2023.jpg',
       accentBg: 'hover:border-[#14110f]',
+    },
+    {
+      id: 'f1' as BracketCategory,
+      title: 'Formula 1 Division',
+      subtitle: 'V10 Screamers, Blown Diffusers & Hybrid Monsters',
+      badge: '16 Machines',
+      icon: <Battery className="w-6 h-6 text-[#58fe05]" />,
+      avgHp: '~900 HP',
+      avgPrice: '$12.0M - $18.0M',
+      examples: 'Ferrari F2004, Mercedes W11, Brawn BGP 001, Red Bull RB19',
+      description: 'The absolute pinnacle of motorsport engineering. Open-wheel monocoques, 15,000 RPM ceilings, and hyper-advanced aerodynamic downforce.',
+      image: '/public/f1/renault-r25-2005.jpg',
+      accentBg: 'hover:border-[#C63A16]',
     },
   ];
 
@@ -83,7 +96,7 @@ export const BracketSetupPage: React.FC = () => {
       </div>
 
       {/* Division Cards Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {divisions.map((division, idx) => (
           <motion.div
             key={division.id}
@@ -163,7 +176,7 @@ export const BracketSetupPage: React.FC = () => {
                 className="w-full text-xs py-3"
                 icon={<ArrowRight className="w-4 h-4" />}
               >
-                Launch {division.title} Bracket
+                Launch {division.title}
               </GlassButton>
             </div>
           </motion.div>

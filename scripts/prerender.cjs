@@ -143,7 +143,8 @@ let written = 0;
 // ── 1. Per-car spec pages ─────────────────────────────────────────────────────
 for (const car of cars) {
   const title       = `${car.year} ${car.brand} ${car.model} — ${SITE_NAME}`;
-  const description = `${car.horsepower} hp, ${car.topSpeedMph} mph top speed, $${Number(car.priceUsd).toLocaleString()} MSRP — see the full spec sheet on APEX.`;
+  const priceMeta   = car.priceUsd !== null ? `, $${Number(car.priceUsd).toLocaleString()} MSRP` : '';
+  const description = `${car.horsepower} hp, ${car.topSpeedMph} mph top speed${priceMeta} — see the full spec sheet on APEX.`;
   const url         = `${SITE_URL}/car/${car.id}`;
   const image       = ogImageUrl(car);
 
@@ -154,13 +155,16 @@ for (const car of cars) {
     brand: { '@type': 'Brand', name: car.brand },
     image: image,
     description: car.blurb || description,
-    offers: {
+  };
+
+  if (car.priceUsd !== null) {
+    ldJson.offers = {
       '@type': 'Offer',
       priceCurrency: 'USD',
       price: car.priceUsd,
       availability: 'https://schema.org/InStock',
-    },
-  };
+    };
+  }
 
   const html = buildHtml({
     title,

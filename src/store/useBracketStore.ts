@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { Car } from '../types/car';
 import { getCarsByCategory } from '../data/carsData';
 
-export type BracketCategory = 'normal' | 'luxury' | 'hyper';
+export type BracketCategory = 'normal' | 'luxury' | 'hyper' | 'f1';
 export type RoundName = 'round-of-16' | 'quarterfinals' | 'semifinals' | 'final' | 'completed';
 
 export interface BracketState {

@@ -10,14 +10,14 @@ export interface Car {
   brand: string;
   model: string;
   year: number;
-  category: "normal" | "luxury" | "hyper";
+  category: "normal" | "luxury" | "hyper" | "f1";
   image: string;
   engine: CarEngine;
   horsepower: number;
-  torqueLbFt: number;
+  torqueLbFt: number | null;
   topSpeedMph: number;
-  zeroToSixtyS: number;
-  priceUsd: number;
+  zeroToSixtyS: number | null;
+  priceUsd: number | null;
   weightLbs: number;
   drivetrain: string;
   transmission: string;

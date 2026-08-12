@@ -23,69 +23,63 @@ import { SITE_NAME } from '../constants/siteConfig';
 // winnersHistory[14]    = Final winner (1 pick) = champion
 // ─────────────────────────────────────────────────────────────────────────────
 
+// ─── BracketNode ─────────────────────────────────────────────────────────────
 interface BracketNodeProps {
   car: Car | null;
+  isWinner?: boolean;
   isChampion?: boolean;
-  size?: 'sm' | 'md' | 'lg';
 }
 
-const BracketNode: React.FC<BracketNodeProps> = ({ car, isChampion = false, size = 'sm' }) => {
-  const imgSize = size === 'lg' ? 'h-16 w-16' : size === 'md' ? 'h-12 w-12' : 'h-9 w-9';
-  const textSize = size === 'lg' ? 'text-xs' : 'text-[9px]';
-
+const BracketNode: React.FC<BracketNodeProps> = ({ car, isWinner = false, isChampion = false }) => {
   if (!car) {
     return (
-      <div className={`flex items-center gap-2 p-1.5 rounded border border-dashed border-black/15 bg-white/50 opacity-40 min-w-[130px]`}>
-        <div className={`${imgSize} rounded bg-neutral-100 flex-shrink-0`} />
-        <span className="text-[9px] font-mono text-neutral-400">TBD</span>
+      <div className="flex items-center gap-1.5 px-2 py-1 rounded border border-dashed border-black/15 bg-white/40 opacity-40 w-full">
+        <div className="h-5 w-5 rounded bg-neutral-100 flex-shrink-0" />
+        <span className="text-[8px] font-mono text-neutral-400">TBD</span>
       </div>
     );
   }
-
   return (
     <Link
       to={`/car/${car.id}`}
-      className={`flex items-center gap-2 p-1.5 rounded border transition-all hover:shadow-md min-w-[130px] ${
+      className={`flex items-center gap-1.5 px-2 py-1 rounded border transition-all hover:shadow-sm w-full ${
         isChampion
-          ? 'border-[#C63A16] bg-[#C63A16]/5 shadow-md ring-1 ring-[#C63A16]/30'
-          : 'border-black/10 bg-white/70 hover:border-[#C63A16]/40'
+          ? 'border-[#C63A16] bg-[#C63A16]/5 ring-1 ring-[#C63A16]/20'
+          : isWinner
+          ? 'border-[#C63A16]/30 bg-white/90'
+          : 'border-black/10 bg-white/50 opacity-40'
       }`}
     >
-      <div className={`${imgSize} rounded overflow-hidden bg-neutral-100 flex-shrink-0`}>
+      <div className="h-5 w-5 rounded overflow-hidden bg-neutral-100 flex-shrink-0">
         <img src={car.image} alt={`${car.year} ${car.brand} ${car.model}`} className="w-full h-full object-cover" />
       </div>
       <div className="min-w-0 flex-1">
-        <div className={`${textSize} font-mono text-neutral-400 truncate`}>{car.brand}</div>
-        <div className={`${textSize} font-bold text-[#14110f] truncate`}>{car.model}</div>
-        {isChampion && (
-          <div className="text-[8px] font-mono font-bold text-[#C63A16] uppercase tracking-wider mt-0.5">
-            Champion
-          </div>
-        )}
+        <div className="text-[7px] font-mono text-neutral-400 truncate leading-tight">{car.brand}</div>
+        <div className="text-[8px] font-bold text-[#14110f] truncate leading-tight">{car.model}</div>
       </div>
     </Link>
   );
 };
 
-interface MatchupProps {
+// ─── Vertical Matchup Card ────────────────────────────────────────────────────
+interface VMatchupProps {
   carA: Car | null;
   carB: Car | null;
   winner: Car | null;
-  round: string;
+  isChampion?: boolean;
 }
 
-const Matchup: React.FC<MatchupProps> = ({ carA, carB, winner, round }) => (
-  <div className="flex flex-col gap-1 relative">
-    <div className={`flex items-center gap-1.5 p-0.5 rounded-sm ${winner?.id === carA?.id ? 'opacity-100' : 'opacity-45'}`}>
-      <BracketNode car={carA} />
-    </div>
-    <div className="h-px bg-black/10 mx-2" />
-    <div className={`flex items-center gap-1.5 p-0.5 rounded-sm ${winner?.id === carB?.id ? 'opacity-100' : 'opacity-45'}`}>
-      <BracketNode car={carB} />
-    </div>
+const VMatchup: React.FC<VMatchupProps> = ({ carA, carB, winner, isChampion = false }) => (
+  <div className={`flex flex-col rounded border bg-white/80 shadow-sm overflow-hidden ${
+    isChampion ? 'border-[#C63A16] ring-1 ring-[#C63A16]/20' : 'border-black/10'
+  }`}>
+    <BracketNode car={carA} isWinner={winner?.id === carA?.id} isChampion={isChampion} />
+    <div className="h-px bg-black/8 mx-1" />
+    <BracketNode car={carB} isWinner={winner?.id === carB?.id} />
   </div>
 );
 
+// ─── Vertical Bracket Tree ────────────────────────────────────────────────────
 interface BracketTreeProps {
   pool: Car[];
   winnersHistory: Car[];
@@ -93,156 +87,210 @@ interface BracketTreeProps {
 }
 
 const BracketTree: React.FC<BracketTreeProps> = ({ pool, winnersHistory, champion }) => {
-  // Reconstruct bracket structure
-  // pool[0..15] = 16 seeded cars
-  // R16 matchups: pairs of pool cars
   const r16Pairs: [Car, Car][] = [];
   for (let i = 0; i < 16; i += 2) {
     if (pool[i] && pool[i + 1]) r16Pairs.push([pool[i], pool[i + 1]]);
   }
-
-  // R16 winners = winnersHistory[0..7]
   const r16Winners = winnersHistory.slice(0, 8);
 
-  // QF matchups: pairs of r16 winners
-  const qfPairs: [Car, Car][] = [];
-  for (let i = 0; i < r16Winners.length; i += 2) {
-    if (r16Winners[i] && r16Winners[i + 1]) qfPairs.push([r16Winners[i], r16Winners[i + 1]]);
-  }
+  const qfPairs: [Car | null, Car | null][] = [];
+  for (let i = 0; i < 8; i += 2) qfPairs.push([r16Winners[i] || null, r16Winners[i + 1] || null]);
   const qfWinners = winnersHistory.slice(8, 12);
 
-  // SF matchups: pairs of qf winners
-  const sfPairs: [Car, Car][] = [];
-  for (let i = 0; i < qfWinners.length; i += 2) {
-    if (qfWinners[i] && qfWinners[i + 1]) sfPairs.push([qfWinners[i], qfWinners[i + 1]]);
-  }
+  const sfPairs: [Car | null, Car | null][] = [];
+  for (let i = 0; i < 4; i += 2) sfPairs.push([qfWinners[i] || null, qfWinners[i + 1] || null]);
   const sfWinners = winnersHistory.slice(12, 14);
 
-  // Final
   const finalPair: [Car | null, Car | null] = [sfWinners[0] || null, sfWinners[1] || null];
-  const finalWinner = champion;
 
-  const roundLabel = (label: string) => (
-    <div className="text-[9px] font-mono font-bold uppercase tracking-widest text-neutral-400 text-center mb-2 border-b border-black/10 pb-1">
-      {label}
-    </div>
+  // Layout constants (px)
+  const CARD_W = 128;  // width of each matchup card
+  const CARD_H = 42;   // height of each matchup card (2 nodes + divider)
+  const GAP = 6;       // gap between sibling cards in a row
+  const CONN_H = 28;   // vertical gap between rounds (used for connector lines)
+  const LABEL_H = 20;  // round label height
+  const ROW_H = CARD_H + LABEL_H; // total row height including label
+
+  // 8 cards across at R16, each block = CARD_W + GAP, total width = 8*(CARD_W+GAP) - GAP
+  const totalW = 8 * CARD_W + 7 * GAP;
+
+  // Center x of the i-th card in a row of `count` evenly-distributed cards
+  const cx = (index: number, count: number): number => {
+    const blockW = totalW / count;
+    return blockW * index + blockW / 2;
+  };
+
+  // Top y of the cards row for round index ri (0=R16, 1=QF, 2=SF, 3=Final)
+  const rowCardTopY = (ri: number): number => ri * (ROW_H + CONN_H) + LABEL_H;
+  const rowCardBotY = (ri: number): number => rowCardTopY(ri) + CARD_H;
+
+  const svgH = 4 * (ROW_H + CONN_H) + LABEL_H + CARD_H + CONN_H + CARD_H + LABEL_H;
+
+  // Build SVG connectors: for rounds 0→1, 1→2, 2→3
+  const connectors: React.ReactNode[] = [];
+  for (let ri = 0; ri < 3; ri++) {
+    const childCount = [8, 4, 2, 1][ri];
+    const parentCount = [8, 4, 2, 1][ri + 1];
+    for (let pi = 0; pi < parentCount; pi++) {
+      const c1 = cx(pi * 2, childCount);
+      const c2 = cx(pi * 2 + 1, childCount);
+      const px_ = cx(pi, parentCount);
+      const topY = rowCardBotY(ri);
+      const botY = rowCardTopY(ri + 1);
+      const midY = topY + (botY - topY) / 2;
+      connectors.push(
+        <g key={`c-${ri}-${pi}`}>
+          <line x1={c1} y1={topY} x2={c1} y2={midY} stroke="#C63A16" strokeWidth="2.5" strokeLinecap="round" />
+          <line x1={c2} y1={topY} x2={c2} y2={midY} stroke="#C63A16" strokeWidth="2.5" strokeLinecap="round" />
+          <line x1={c1} y1={midY} x2={c2} y2={midY} stroke="#C63A16" strokeWidth="2.5" strokeLinecap="round" />
+          <line x1={px_} y1={midY} x2={px_} y2={botY} stroke="#C63A16" strokeWidth="2.5" strokeLinecap="round" />
+        </g>
+      );
+    }
+  }
+  // Final → Champion connector
+  const champTopY = rowCardBotY(3);
+  const champCardTopY = champTopY + CONN_H;
+  connectors.push(
+    <line key="c-champ" x1={cx(0, 1)} y1={champTopY} x2={cx(0, 1)} y2={champCardTopY} stroke="#C63A16" strokeWidth="2.5" strokeLinecap="round" />
   );
 
+  const roundData = [
+    {
+      label: 'Round of 16', count: 8,
+      cards: r16Pairs.map((p, i) => ({ carA: p[0], carB: p[1], winner: r16Winners[i] || null })),
+    },
+    {
+      label: 'Quarterfinals', count: 4,
+      cards: qfPairs.map((p, i) => ({ carA: p[0], carB: p[1], winner: qfWinners[i] || null })),
+    },
+    {
+      label: 'Semifinals', count: 2,
+      cards: sfPairs.map((p, i) => ({ carA: p[0], carB: p[1], winner: sfWinners[i] || null })),
+    },
+    {
+      label: 'Grand Final', count: 1,
+      cards: [{ carA: finalPair[0], carB: finalPair[1], winner: champion }],
+    },
+  ];
+
   return (
-    <div className="w-full overflow-x-auto pb-4">
-      <div className="flex gap-6 items-start justify-start min-w-max px-2 py-4">
+    <div className="w-full overflow-x-auto pb-4 flex justify-center">
+      <style>{`
+        .v-bracket-zoom {
+          zoom: 0.31;
+        }
+        @media (min-width: 380px) {
+          .v-bracket-zoom {
+            zoom: 0.35;
+          }
+        }
+        @media (min-width: 480px) {
+          .v-bracket-zoom {
+            zoom: 0.44;
+          }
+        }
+        @media (min-width: 640px) {
+          .v-bracket-zoom {
+            zoom: 0.58;
+          }
+        }
+        @media (min-width: 768px) {
+          .v-bracket-zoom {
+            zoom: 0.72;
+          }
+        }
+        @media (min-width: 1024px) {
+          .v-bracket-zoom {
+            zoom: 0.88;
+          }
+        }
+        @media (min-width: 1200px) {
+          .v-bracket-zoom {
+            zoom: 1;
+          }
+        }
+      `}</style>
+      <div className="v-bracket-zoom" style={{ width: `${totalW}px`, minWidth: `${totalW}px`, position: 'relative', margin: '0 auto' }}>
 
-        {/* ── Round of 16 (top half, left side) ─────────── */}
-        <div className="flex flex-col gap-5">
-          {roundLabel('Round of 16')}
-          {r16Pairs.slice(0, 4).map((pair, i) => (
-            <Matchup
-              key={`r16-top-${i}`}
-              carA={pair[0]}
-              carB={pair[1]}
-              winner={r16Winners[i] || null}
-              round="r16"
-            />
-          ))}
-        </div>
+        {/* SVG connector overlay */}
+        <svg
+          width={totalW}
+          height={svgH}
+          style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none', zIndex: 1, overflow: 'visible' }}
+        >
+          {connectors}
+        </svg>
 
-        {/* ── QF top half ─────────── */}
-        <div className="flex flex-col gap-12 pt-7">
-          {roundLabel('Quarterfinals')}
-          {qfPairs.slice(0, 2).map((pair, i) => (
-            <Matchup
-              key={`qf-top-${i}`}
-              carA={pair[0] || null}
-              carB={pair[1] || null}
-              winner={qfWinners[i] || null}
-              round="qf"
-            />
-          ))}
-        </div>
+        {/* Round rows */}
+        <div style={{ position: 'relative', zIndex: 2 }}>
+          {roundData.map((round, ri) => {
+            const blockW = totalW / round.count;
+            return (
+              <div key={round.label}>
+                {/* Label */}
+                <div style={{ display: 'flex', height: `${LABEL_H}px`, alignItems: 'center' }}>
+                  <span
+                    className="text-[9px] font-mono font-extrabold uppercase tracking-widest text-neutral-400"
+                    style={{ paddingLeft: '2px' }}
+                  >
+                    {round.label}
+                  </span>
+                </div>
+                {/* Cards */}
+                <div style={{ display: 'flex', height: `${CARD_H}px`, gap: 0 }}>
+                  {Array.from({ length: round.count }).map((_, i) => {
+                    const card = round.cards[i];
+                    return (
+                      <div
+                        key={i}
+                        style={{
+                          width: `${blockW}px`,
+                          flexShrink: 0,
+                          paddingLeft: `${GAP / 2}px`,
+                          paddingRight: `${GAP / 2}px`,
+                        }}
+                      >
+                        {card ? (
+                          <VMatchup carA={card.carA} carB={card.carB} winner={card.winner} />
+                        ) : (
+                          <VMatchup carA={null} carB={null} winner={null} />
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+                {/* Connector gap spacer */}
+                {ri < 3 && <div style={{ height: `${CONN_H}px` }} />}
+              </div>
+            );
+          })}
 
-        {/* ── SF top half ─────────── */}
-        <div className="flex flex-col gap-28 pt-14">
-          {roundLabel('Semifinals')}
-          {sfPairs.slice(0, 1).map((pair, i) => (
-            <Matchup
-              key={`sf-top-${i}`}
-              carA={pair[0] || null}
-              carB={pair[1] || null}
-              winner={sfWinners[0] || null}
-              round="sf"
-            />
-          ))}
-        </div>
-
-        {/* ── Grand Final ─────────── */}
-        <div className="flex flex-col pt-28">
-          {roundLabel('Grand Final')}
-          <Matchup
-            carA={finalPair[0]}
-            carB={finalPair[1]}
-            winner={finalWinner}
-            round="final"
-          />
-        </div>
-
-        {/* ── Champion ─────────── */}
-        <div className="flex flex-col pt-28">
-          {roundLabel('Champion')}
-          <div className="flex flex-col items-center gap-2">
-            <Crown className="w-5 h-5 text-[#C63A16]" />
-            <BracketNode car={champion} isChampion size="md" />
+          {/* Champion row */}
+          <div style={{ height: `${CONN_H}px` }} />
+          <div style={{ height: `${LABEL_H}px`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span className="text-[9px] font-mono font-extrabold uppercase tracking-widest text-[#C63A16]">
+              🏆 Champion
+            </span>
           </div>
-        </div>
-
-        {/* ── SF bottom half ─────────── */}
-        <div className="flex flex-col gap-28 pt-14" style={{ direction: 'rtl' }}>
-          <div style={{ direction: 'ltr' }}>{roundLabel('Semifinals')}</div>
-          {sfPairs.slice(1).map((pair, i) => (
-            <Matchup
-              key={`sf-bot-${i}`}
-              carA={pair[0] || null}
-              carB={pair[1] || null}
-              winner={sfWinners[1] || null}
-              round="sf"
-            />
-          ))}
-          {sfPairs.length < 2 && (
-            <Matchup carA={null} carB={null} winner={null} round="sf" />
-          )}
-        </div>
-
-        {/* ── QF bottom half ─────────── */}
-        <div className="flex flex-col gap-12 pt-7">
-          {roundLabel('Quarterfinals')}
-          {qfPairs.slice(2).map((pair, i) => (
-            <Matchup
-              key={`qf-bot-${i}`}
-              carA={pair[0] || null}
-              carB={pair[1] || null}
-              winner={qfWinners[i + 2] || null}
-              round="qf"
-            />
-          ))}
-          {qfPairs.length < 4 && Array.from({ length: 2 - Math.max(0, qfPairs.length - 2) }).map((_, i) => (
-            <Matchup key={`qf-bot-empty-${i}`} carA={null} carB={null} winner={null} round="qf" />
-          ))}
-        </div>
-
-        {/* ── Round of 16 bottom half ─────────── */}
-        <div className="flex flex-col gap-5">
-          {roundLabel('Round of 16')}
-          {r16Pairs.slice(4).map((pair, i) => (
-            <Matchup
-              key={`r16-bot-${i}`}
-              carA={pair[0]}
-              carB={pair[1]}
-              winner={r16Winners[i + 4] || null}
-              round="r16"
-            />
-          ))}
-          {Array.from({ length: 4 - Math.max(0, r16Pairs.length - 4) }).map((_, i) => (
-            <Matchup key={`r16-bot-empty-${i}`} carA={null} carB={null} winner={null} round="r16" />
-          ))}
+          <div style={{ display: 'flex', height: `${CARD_H}px`, justifyContent: 'center' }}>
+            <div style={{ width: `${CARD_W}px` }}>
+              {champion ? (
+                <div className={`flex items-center gap-1.5 px-2 py-1 rounded border border-[#C63A16] bg-[#C63A16]/10 ring-1 ring-[#C63A16] w-full h-full shadow-md`}>
+                  <div className="h-5 w-5 rounded overflow-hidden bg-neutral-100 flex-shrink-0 border border-[#C63A16]/30">
+                    <img src={champion.image} alt={`${champion.year} ${champion.brand} ${champion.model}`} className="w-full h-full object-cover" />
+                  </div>
+                  <div className="min-w-0 flex-1 leading-tight">
+                    <div className="text-[7.5px] font-mono text-neutral-400 truncate uppercase tracking-wider">{champion.brand}</div>
+                    <div className="text-[9px] font-extrabold text-[#14110f] truncate">{champion.model}</div>
+                    <div className="text-[7.5px] font-mono font-extrabold text-[#C63A16] uppercase tracking-wider leading-tight">Champion</div>
+                  </div>
+                </div>
+              ) : (
+                <VMatchup carA={null} carB={null} winner={null} />
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -296,7 +344,7 @@ const ChampionShowcase: React.FC<{ car: Car }> = ({ car }) => {
               <span>APEX CHAMPION</span>
             </div>
             <div className="absolute bottom-4 right-4 bg-black/85 text-white text-xs font-mono font-bold px-3 py-1.5 rounded backdrop-blur-md">
-              ${car.priceUsd.toLocaleString()}
+              {car.priceUsd !== null ? `$${car.priceUsd.toLocaleString()}` : 'MSRP: N/A'}
             </div>
           </div>
           <div className="w-full lg:w-1/2">
@@ -319,7 +367,7 @@ const ChampionShowcase: React.FC<{ car: Car }> = ({ car }) => {
               </div>
               <div>
                 <span className="text-[10px] text-neutral-400 uppercase block">0-60 MPH</span>
-                <span className="font-extrabold text-[#14110f] text-sm">{car.zeroToSixtyS}s</span>
+                <span className="font-extrabold text-[#14110f] text-sm">{car.zeroToSixtyS !== null ? `${car.zeroToSixtyS}s` : 'N/A'}</span>
               </div>
               <div>
                 <span className="text-[10px] text-neutral-400 uppercase block">Prestige</span>
@@ -373,7 +421,9 @@ export const BracketResultPage: React.FC = () => {
 
     const avgHp    = winnersHistory.reduce((acc, c) => acc + c.horsepower, 0) / n;
     const avgSpeed = winnersHistory.reduce((acc, c) => acc + c.topSpeedMph, 0) / n;
-    const avgPrice = winnersHistory.reduce((acc, c) => acc + c.priceUsd, 0) / n;
+
+    const priceCars = winnersHistory.filter((c) => c.priceUsd !== null);
+    const avgPrice  = priceCars.length > 0 ? priceCars.reduce((acc, c) => acc + c.priceUsd!, 0) / priceCars.length : null;
 
     const allP2W = allCars.map((c) => c.horsepower / c.weightLbs);
     const minP2W = Math.min(...allP2W);
@@ -387,7 +437,7 @@ export const BracketResultPage: React.FC = () => {
     return [
       { axis: 'Power',   score: clamp(((avgHp    - bounds.minHp)    / (bounds.maxHp    - bounds.minHp))    * 100), raw: `${Math.round(avgHp)} HP` },
       { axis: 'Speed',   score: clamp(((avgSpeed - bounds.minSpeed) / (bounds.maxSpeed - bounds.minSpeed)) * 100), raw: `${Math.round(avgSpeed)} MPH / ${Math.round(avgSpeed * 1.60934)} KPH` },
-      { axis: 'Value',   score: clamp(((bounds.maxPrice - avgPrice)  / (bounds.maxPrice - bounds.minPrice)) * 100), raw: `$${Math.round(avgPrice).toLocaleString()}` },
+      { axis: 'Value',   score: avgPrice !== null ? clamp(((bounds.maxPrice - avgPrice)  / (bounds.maxPrice - bounds.minPrice)) * 100) : 0, raw: avgPrice !== null ? `$${Math.round(avgPrice).toLocaleString()}` : 'N/A' },
       { axis: 'Agility', score: clamp(((avgP2W   - minP2W)          / (maxP2W          - minP2W))          * 100), raw: `${(avgP2W * 2000).toFixed(1)} hp/ton` },
       { axis: 'Prestige',score: clamp(((avgPrestige - 1) / 9)       * 100),                                        raw: `${avgPrestige.toFixed(1)} / 10` },
     ];
@@ -467,7 +517,7 @@ export const BracketResultPage: React.FC = () => {
               <span>DIVISION CHAMPION</span>
             </div>
             <div className="absolute bottom-4 right-4 bg-black/85 text-white text-xs font-mono font-bold px-3 py-1.5 rounded backdrop-blur-md">
-              ${champion.priceUsd.toLocaleString()}
+              {champion.priceUsd !== null ? `$${champion.priceUsd.toLocaleString()}` : 'MSRP: N/A'}
             </div>
           </div>
 
@@ -495,7 +545,7 @@ export const BracketResultPage: React.FC = () => {
               </div>
               <div>
                 <span className="text-[10px] text-neutral-400 uppercase block">0-60 MPH</span>
-                <span className="font-extrabold text-[#14110f] text-sm">{champion.zeroToSixtyS}s</span>
+                <span className="font-extrabold text-[#14110f] text-sm">{champion.zeroToSixtyS !== null ? `${champion.zeroToSixtyS}s` : 'N/A'}</span>
               </div>
               <div>
                 <span className="text-[10px] text-neutral-400 uppercase block">Prestige</span>

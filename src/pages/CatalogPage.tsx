@@ -18,7 +18,7 @@ export const CatalogPage: React.FC = () => {
   const availableBrands = useMemo(() => getAvailableBrands(allCars), []);
 
   // Filter State
-  const [category, setCategory] = useState<'all' | 'normal' | 'luxury' | 'hyper'>('all');
+  const [category, setCategory] = useState<'all' | 'normal' | 'luxury' | 'hyper' | 'f1'>('all');
   const [search, setSearch] = useState('');
   const [selectedBrand, setSelectedBrand] = useState('all');
   const [minHp, setMinHp] = useState<number>(bounds.minHp);
@@ -51,6 +51,7 @@ export const CatalogPage: React.FC = () => {
       normal: allCars.filter((c) => c.category === 'normal').length,
       luxury: allCars.filter((c) => c.category === 'luxury').length,
       hyper: allCars.filter((c) => c.category === 'hyper').length,
+      f1: allCars.filter((c) => c.category === 'f1').length,
     };
   }, []);
 
@@ -89,7 +90,7 @@ export const CatalogPage: React.FC = () => {
         <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
           {/* Category Pills */}
           <div className="flex items-center gap-1.5 p-1 bg-black/5 rounded-sm overflow-x-auto">
-            {(['all', 'normal', 'luxury', 'hyper'] as const).map((cat) => {
+            {(['all', 'normal', 'luxury', 'hyper', 'f1'] as const).map((cat) => {
               const active = category === cat;
               return (
                 <button
@@ -307,14 +308,31 @@ export const CatalogPage: React.FC = () => {
                         <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Top Speed</span>
                         <span className="font-bold text-[#14110f] text-[11px] sm:text-xs whitespace-nowrap tracking-tight block">{car.topSpeedMph} MPH / {Math.round(car.topSpeedMph * 1.60934)} KPH</span>
                       </div>
-                      <div>
-                        <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">0-60 MPH</span>
-                        <span className="font-bold text-[#14110f]">{car.zeroToSixtyS}s</span>
-                      </div>
-                      <div>
-                        <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Price</span>
-                        <span className="font-bold text-[#C63A16]">${car.priceUsd.toLocaleString()}</span>
-                      </div>
+                      {car.category === 'f1' ? (
+                        <>
+                          <div>
+                            <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Engine Type</span>
+                            <span className="font-bold text-[#14110f] truncate block" title={car.engine.type}>{car.engine.type}</span>
+                          </div>
+                          <div>
+                            <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Weight</span>
+                            <span className="font-bold text-[#C63A16] text-[11px] sm:text-xs block tracking-tighter truncate">
+                              {car.weightLbs.toLocaleString()} lbs / {Math.round(car.weightLbs * 0.45359237)} kg
+                            </span>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div>
+                            <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">0-60 MPH</span>
+                            <span className="font-bold text-[#14110f]">{car.zeroToSixtyS !== null ? `${car.zeroToSixtyS}s` : 'N/A'}</span>
+                          </div>
+                          <div>
+                            <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Price</span>
+                            <span className="font-bold text-[#C63A16]">{car.priceUsd !== null ? `$${car.priceUsd.toLocaleString()}` : 'N/A'}</span>
+                          </div>
+                        </>
+                      )}
                     </div>
 
                     <GlassButton to={`/car/${car.id}`} variant="secondary" className="w-full text-xs py-2.5">

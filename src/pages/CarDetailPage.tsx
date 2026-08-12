@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Flame, ArrowLeft, Zap, Gauge, Cpu, Globe, Sparkles, Compass } from 'lucide-react';
@@ -11,6 +11,10 @@ export const CarDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const car = getCarById(id || '');
   const { toggleSave, isSaved } = useGarageStore();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
 
   // 404 / Machine Not Found state
   if (!car) {
@@ -37,10 +41,10 @@ export const CarDetailPage: React.FC = () => {
 
   const saved = isSaved(car.id);
 
-  // Car-specific document head
+  const priceMetaStr = car.priceUsd !== null ? `, $${car.priceUsd.toLocaleString()} MSRP` : '';
   useDocumentHead(
     `${car.year} ${car.brand} ${car.model} — APEX`,
-    `${car.horsepower} hp, ${car.topSpeedMph} mph top speed, $${car.priceUsd.toLocaleString()} MSRP — see the full spec sheet on APEX.`
+    `${car.horsepower} hp, ${car.topSpeedMph} mph top speed${priceMetaStr} — see the full spec sheet on APEX.`
   );
 
   // Power to weight ratio in HP per US ton (2,000 lbs)
@@ -103,11 +107,10 @@ export const CarDetailPage: React.FC = () => {
                 {car.model}
               </h1>
 
-              {/* Price Banner */}
-              <div className="mt-6 inline-flex items-baseline gap-2 px-4 py-2 rounded bg-black/5 border border-black/10">
+               <div className="mt-6 inline-flex items-baseline gap-2 px-4 py-2 rounded bg-black/5 border border-black/10">
                 <span className="text-xs font-mono text-neutral-500 uppercase">Base MSRP</span>
                 <span className="text-2xl font-extrabold text-[#C63A16] font-mono">
-                  ${car.priceUsd.toLocaleString()}
+                  {car.priceUsd !== null ? `$${car.priceUsd.toLocaleString()}` : 'N/A'}
                 </span>
               </div>
 
@@ -121,9 +124,9 @@ export const CarDetailPage: React.FC = () => {
                   <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Top Speed</span>
                   <span className="text-xl font-extrabold text-[#14110f]">{car.topSpeedMph} MPH / {Math.round(car.topSpeedMph * 1.60934)} KPH</span>
                 </div>
-                <div className="p-3 bg-white/60 rounded border border-black/5">
+                 <div className="p-3 bg-white/60 rounded border border-black/5">
                   <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">0-60 MPH Acceleration</span>
-                  <span className="text-xl font-extrabold text-[#14110f]">{car.zeroToSixtyS}s</span>
+                  <span className="text-xl font-extrabold text-[#14110f]">{car.zeroToSixtyS !== null ? `${car.zeroToSixtyS}s` : 'N/A'}</span>
                 </div>
                 <div className="p-3 bg-white/60 rounded border border-black/5">
                   <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Power-To-Weight</span>
@@ -163,13 +166,13 @@ export const CarDetailPage: React.FC = () => {
               <span className="text-neutral-500 uppercase">Horsepower</span>
               <span className="font-bold text-[#14110f] text-sm">{car.horsepower} HP</span>
             </li>
-            <li className="flex justify-between items-center py-1 border-b border-black/5">
+             <li className="flex justify-between items-center py-1 border-b border-black/5">
               <span className="text-neutral-500 uppercase">Peak Torque</span>
-              <span className="font-bold text-[#14110f] text-sm">{car.torqueLbFt} lb-ft</span>
+              <span className="font-bold text-[#14110f] text-sm">{car.torqueLbFt !== null ? `${car.torqueLbFt} lb-ft` : 'N/A'}</span>
             </li>
             <li className="flex justify-between items-center py-1 border-b border-black/5">
               <span className="text-neutral-500 uppercase">0–60 MPH Sprint</span>
-              <span className="font-bold text-[#14110f] text-sm">{car.zeroToSixtyS} seconds</span>
+              <span className="font-bold text-[#14110f] text-sm">{car.zeroToSixtyS !== null ? `${car.zeroToSixtyS} seconds` : 'N/A'}</span>
             </li>
             <li className="flex justify-between items-center py-1 border-b border-black/5">
               <span className="text-neutral-500 uppercase">Top Speed</span>
@@ -243,9 +246,9 @@ export const CarDetailPage: React.FC = () => {
               <span className="text-neutral-500 uppercase">Country</span>
               <span className="font-bold text-[#14110f]">{car.country}</span>
             </li>
-            <li className="flex justify-between items-center py-1">
+             <li className="flex justify-between items-center py-1">
               <span className="text-neutral-500 uppercase">Base MSRP</span>
-              <span className="font-bold text-[#C63A16]">${car.priceUsd.toLocaleString()}</span>
+              <span className="font-bold text-[#C63A16]">{car.priceUsd !== null ? `$${car.priceUsd.toLocaleString()}` : 'N/A'}</span>
             </li>
           </ul>
         </div>

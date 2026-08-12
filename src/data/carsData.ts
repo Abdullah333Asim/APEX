@@ -8,7 +8,7 @@ export const getCarById = (id: string): Car | undefined => {
   return allCars.find((car) => car.id === id);
 };
 
-export const getCarsByCategory = (category: 'normal' | 'luxury' | 'hyper' | 'all'): Car[] => {
+export const getCarsByCategory = (category: 'normal' | 'luxury' | 'hyper' | 'f1' | 'all'): Car[] => {
   if (category === 'all') return allCars;
   return allCars.filter((car) => car.category === category);
 };
@@ -34,11 +34,13 @@ export const getStatRanges = (cars: Car[] = allCars): StatRanges => {
     return { minHp: 0, maxHp: 2000, minPrice: 0, maxPrice: 5000000, minSpeed: 0, maxSpeed: 320, minYear: 2000, maxYear: 2026 };
   }
 
+  const priceCars = cars.map((c) => c.priceUsd).filter((p): p is number => p !== null);
+
   return {
     minHp: Math.min(...cars.map((c) => c.horsepower)),
     maxHp: Math.max(...cars.map((c) => c.horsepower)),
-    minPrice: Math.min(...cars.map((c) => c.priceUsd)),
-    maxPrice: Math.max(...cars.map((c) => c.priceUsd)),
+    minPrice: priceCars.length > 0 ? Math.min(...priceCars) : 0,
+    maxPrice: priceCars.length > 0 ? Math.max(...priceCars) : 0,
     minSpeed: Math.min(...cars.map((c) => c.topSpeedMph)),
     maxSpeed: Math.max(...cars.map((c) => c.topSpeedMph)),
     minYear: Math.min(...cars.map((c) => c.year)),
@@ -47,7 +49,7 @@ export const getStatRanges = (cars: Car[] = allCars): StatRanges => {
 };
 
 export interface FilterParams {
-  category?: 'all' | 'normal' | 'luxury' | 'hyper';
+  category?: 'all' | 'normal' | 'luxury' | 'hyper' | 'f1';
   search?: string;
   brand?: string;
   minHp?: number;
@@ -58,7 +60,7 @@ export interface FilterParams {
   sortOrder?: 'asc' | 'desc';
 }
 
-const getCarSortValue = (car: Car, sortBy: string): number | string => {
+const getCarSortValue = (car: Car, sortBy: string): number | string | null => {
   switch (sortBy) {
     case 'horsepower':
       return car.horsepower;
@@ -124,16 +126,22 @@ export const filterCars = (params: FilterParams): Car[] => {
 
   // Price range
   if (minPrice !== undefined) {
-    result = result.filter((car) => car.priceUsd >= minPrice);
+    result = result.filter((car) => car.priceUsd !== null && car.priceUsd >= minPrice);
   }
   if (maxPrice !== undefined) {
-    result = result.filter((car) => car.priceUsd <= maxPrice);
+    result = result.filter((car) => car.priceUsd !== null && car.priceUsd <= maxPrice);
   }
 
   // Sorting
   result.sort((a, b) => {
     const valA = getCarSortValue(a, sortBy);
     const valB = getCarSortValue(b, sortBy);
+
+    if (valA === null || valB === null) {
+      // Sort nulls (e.g. F1 cars without price) to the bottom regardless of sort order
+      if (valA === null && valB === null) return 0;
+      return valA === null ? 1 : -1;
+    }
 
     if (typeof valA === 'string' && typeof valB === 'string') {
       return sortOrder === 'asc'
@@ -155,7 +163,10 @@ export const filterCars = (params: FilterParams): Car[] => {
  * - Below 1 million: show as 'k' (rounded to nearest integer, e.g. 250k)
  * - 1 million or above: show as 'm' to the nearest 3 decimal places (stripping redundant trailing zeros, e.g. 1.25m, 1.005m)
  */
-export const formatCompactPrice = (value: number): string => {
+export const formatCompactPrice = (value: number | null | undefined): string => {
+  if (value === null || value === undefined) {
+    return 'N/A';
+  }
   if (value < 1000000) {
     return `${Math.round(value / 1000)}k`;
   }
