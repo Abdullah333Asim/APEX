@@ -177,41 +177,30 @@ const BracketTree: React.FC<BracketTreeProps> = ({ pool, winnersHistory, champio
   return (
     <div className="w-full overflow-x-auto pb-4 flex justify-center">
       <style>{`
+        .v-bracket-container {
+          --scale: 0.31;
+          height: calc(${svgH}px * var(--scale));
+          overflow: hidden;
+          width: 100%;
+          display: flex;
+          justify-content: center;
+        }
         .v-bracket-zoom {
-          zoom: 0.31;
+          transform: scale(var(--scale)) translateZ(0);
+          transform-origin: top center;
+          will-change: transform;
+          -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
         }
-        @media (min-width: 380px) {
-          .v-bracket-zoom {
-            zoom: 0.35;
-          }
-        }
-        @media (min-width: 480px) {
-          .v-bracket-zoom {
-            zoom: 0.44;
-          }
-        }
-        @media (min-width: 640px) {
-          .v-bracket-zoom {
-            zoom: 0.58;
-          }
-        }
-        @media (min-width: 768px) {
-          .v-bracket-zoom {
-            zoom: 0.72;
-          }
-        }
-        @media (min-width: 1024px) {
-          .v-bracket-zoom {
-            zoom: 0.88;
-          }
-        }
-        @media (min-width: 1200px) {
-          .v-bracket-zoom {
-            zoom: 1;
-          }
-        }
+        @media (min-width: 380px) { .v-bracket-container { --scale: 0.35; } }
+        @media (min-width: 480px) { .v-bracket-container { --scale: 0.44; } }
+        @media (min-width: 640px) { .v-bracket-container { --scale: 0.58; } }
+        @media (min-width: 768px) { .v-bracket-container { --scale: 0.72; } }
+        @media (min-width: 1024px) { .v-bracket-container { --scale: 0.88; } }
+        @media (min-width: 1200px) { .v-bracket-container { --scale: 1; } }
       `}</style>
-      <div className="v-bracket-zoom" style={{ width: `${totalW}px`, minWidth: `${totalW}px`, position: 'relative', margin: '0 auto' }}>
+      <div className="v-bracket-container">
+        <div className="v-bracket-zoom" style={{ width: `${totalW}px`, minWidth: `${totalW}px`, position: 'relative' }}>
 
         {/* SVG connector overlay */}
         <svg
@@ -294,7 +283,8 @@ const BracketTree: React.FC<BracketTreeProps> = ({ pool, winnersHistory, champio
         </div>
       </div>
     </div>
-  );
+  </div>
+);
 };
 
 // ─────────────────────────────────────────────────────────────────────────────

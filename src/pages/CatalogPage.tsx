@@ -257,19 +257,20 @@ export const CatalogPage: React.FC = () => {
               return (
                 <motion.div
                   key={car.id}
-                  layout
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
                   transition={{ duration: 0.2 }}
-                  className="glass-panel group rounded-sm overflow-hidden flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl border border-black/10"
+                  className="glass-panel gpu-accelerate group rounded-sm overflow-hidden flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl border border-black/10"
                 >
                   {/* Image Header */}
                   <div className="relative h-48 w-full overflow-hidden bg-neutral-100">
                     <img
                       src={car.image}
                       alt={`${car.year} ${car.brand} ${car.model}`}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 will-change-transform"
                     />
                     <div className="absolute top-3 left-3 bg-black/80 backdrop-blur-md px-2.5 py-1 rounded text-[10px] font-mono font-bold tracking-widest uppercase text-white">
                       {car.category}

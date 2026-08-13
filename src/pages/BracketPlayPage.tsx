@@ -203,16 +203,16 @@ const CompetitorCard: React.FC<CompetitorCardProps> = ({
         opacity: isLoser ? 0.2 : 1,
         x: isLoser ? (align === 'left' ? -60 : 60) : 0,
       }}
-      transition={{ duration: 0.4 }}
+      transition={{ duration: 0.3 }}
       onClick={onOpenSpecs}
-      className={`glass-panel group relative rounded-sm overflow-hidden border transition-all duration-300 cursor-pointer flex flex-col justify-between ${
+      className={`glass-panel gpu-accelerate group relative rounded-sm overflow-hidden border transition-all duration-200 cursor-pointer flex flex-col justify-between ${
         isWinner
           ? 'border-[#C63A16] shadow-2xl ring-2 ring-[#C63A16]/50 bg-white'
           : 'border-black/10 hover:border-black/30 hover:shadow-xl'
       } ${disabled ? 'pointer-events-none' : ''}`}
     >
       {isWinner && (
-        <div className="absolute top-4 left-4 z-30 bg-[#C63A16] text-white text-xs font-mono font-bold uppercase tracking-widest px-3 py-1.5 rounded shadow flex items-center gap-1.5 animate-bounce">
+        <div className="absolute top-4 left-4 z-30 bg-[#C63A16] text-white text-xs font-mono font-bold uppercase tracking-widest px-3 py-1.5 rounded shadow flex items-center gap-1.5">
           <CheckCircle2 className="w-4 h-4" />
           <span>ADVANCING WINNER</span>
         </div>
@@ -222,7 +222,9 @@ const CompetitorCard: React.FC<CompetitorCardProps> = ({
         <img
           src={car.image}
           alt={`${car.year} ${car.brand} ${car.model}`}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          loading="eager"
+          decoding="async"
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 will-change-transform"
         />
 
         {/* View Specs Overlay Button */}
@@ -350,9 +352,9 @@ const CarSpecsModal: React.FC<CarSpecsModalProps> = ({ car, onClose, onSelectCar
     : 'TUNER / SPORT DIVISION';
 
   return createPortal(
-    <div className="fixed inset-0 z-[9999] bg-[#f7f5f2] overflow-y-auto flex flex-col text-[#14110f]">
+    <div className="fixed inset-0 z-[9999] bg-[#f7f5f2] overflow-y-auto flex flex-col text-[#14110f] gpu-accelerate" style={{ WebkitOverflowScrolling: 'touch' }}>
       {/* Header Bar — covers site navbar completely */}
-      <div className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-black/10 shadow-sm px-4 sm:px-8 py-4">
+      <div className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-black/10 shadow-sm px-4 sm:px-8 py-4">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded bg-[#C63A16]/10 text-[#C63A16] flex items-center justify-center">
