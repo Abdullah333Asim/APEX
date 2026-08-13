@@ -41,14 +41,19 @@ export const CarDetailPage: React.FC = () => {
 
   const saved = isSaved(car.id);
 
-  const priceMetaStr = car.priceUsd !== null ? `, $${car.priceUsd.toLocaleString()} MSRP` : '';
+  const priceMetaStr = typeof car.priceUsd === 'number' ? `, $${car.priceUsd.toLocaleString()} MSRP` : '';
+  const hpMetaStr = typeof car.horsepower === 'number' ? `${car.horsepower} hp` : 'N/A hp';
+  const speedMetaStr = typeof car.topSpeedMph === 'number' ? `${car.topSpeedMph} mph top speed` : 'N/A top speed';
+
   useDocumentHead(
     `${car.year} ${car.brand} ${car.model} — APEX`,
-    `${car.horsepower} hp, ${car.topSpeedMph} mph top speed${priceMetaStr} — see the full spec sheet on APEX.`
+    `${hpMetaStr}, ${speedMetaStr}${priceMetaStr} — see the full spec sheet on APEX.`
   );
 
   // Power to weight ratio in HP per US ton (2,000 lbs)
-  const powerToWeightRatio = ((car.horsepower / car.weightLbs) * 2000).toFixed(1);
+  const powerToWeightRatio = typeof car.horsepower === 'number' && typeof car.weightLbs === 'number' && car.weightLbs > 0
+    ? ((car.horsepower / car.weightLbs) * 2000).toFixed(1)
+    : 'N/A';
 
   return (
     <div className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
@@ -66,51 +71,42 @@ export const CarDetailPage: React.FC = () => {
         </span>
       </div>
 
-      {/* Hero Header Section */}
-      <div className="glass-panel rounded-sm p-6 sm:p-10 border border-black/10 shadow-lg">
-        <div className="flex flex-col lg:flex-row gap-8 items-stretch">
-          {/* Main Vehicle Image */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            className="w-full lg:w-3/5 relative min-h-[320px] sm:min-h-[420px] rounded-sm overflow-hidden bg-neutral-100 group shadow-inner"
-          >
+      {/* Hero Showcase Grid */}
+      <div className="glass-panel p-6 sm:p-8 rounded-sm overflow-hidden border border-black/10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          {/* Main Visual Image Showcase */}
+          <div className="lg:col-span-7 relative h-72 sm:h-96 w-full rounded-sm overflow-hidden bg-neutral-100 border border-black/10">
             <img
               src={car.image}
               alt={`${car.year} ${car.brand} ${car.model}`}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              className="w-full h-full object-cover"
             />
-            {/* Category Tag */}
-            <div className="absolute top-4 left-4 bg-black/85 backdrop-blur-md text-white text-xs font-mono font-bold uppercase tracking-widest px-3.5 py-1.5 rounded shadow">
-              {car.category} DIVISION
+            <div className="absolute top-4 right-4 bg-black/85 backdrop-blur-md px-3 py-1 rounded text-xs font-mono font-bold tracking-widest uppercase text-white">
+              {car.country}
             </div>
-            {/* Country Badge */}
-            <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md text-[#14110f] text-xs font-mono font-bold uppercase tracking-widest px-3 py-1 rounded shadow flex items-center gap-1.5">
-              <Globe className="w-3.5 h-3.5 text-[#C63A16]" />
-              <span>{car.country}</span>
+            <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded text-xs font-mono font-bold uppercase tracking-widest text-[#C63A16]">
+              {car.category} division
             </div>
-          </motion.div>
+          </div>
 
-          {/* Title & Key Highlights */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="w-full lg:w-2/5 flex flex-col justify-between"
-          >
+          {/* Key Identifiers & Header Specs */}
+          <div className="lg:col-span-5 flex flex-col justify-between h-full">
             <div>
-              <div className="text-xs font-mono font-bold tracking-[0.25em] text-neutral-500 uppercase">
-                {car.brand} &bull; {car.year}
+              <div className="text-xs font-mono uppercase tracking-widest text-neutral-500">
+                {car.brand} &bull; {car.year} &bull; {car.country}
               </div>
-              <h1 className="text-3xl sm:text-5xl font-extrabold text-[#14110f] uppercase tracking-tight mt-1 font-sans leading-none">
+              <h1 className="text-3xl sm:text-4xl font-extrabold uppercase text-[#14110f] tracking-tight mt-1 font-sans">
                 {car.model}
               </h1>
+              <p className="text-xs sm:text-sm text-neutral-600 mt-4 leading-relaxed font-normal">
+                {car.blurb}
+              </p>
 
-               <div className="mt-6 inline-flex items-baseline gap-2 px-4 py-2 rounded bg-black/5 border border-black/10">
+              {/* Price Banner */}
+              <div className="mt-6 inline-flex items-baseline gap-2 px-4 py-2 rounded bg-black/5 border border-black/10">
                 <span className="text-xs font-mono text-neutral-500 uppercase">Base MSRP</span>
                 <span className="text-2xl font-extrabold text-[#C63A16] font-mono">
-                  {car.priceUsd !== null ? `$${car.priceUsd.toLocaleString()}` : 'N/A'}
+                  {typeof car.priceUsd === 'number' ? `$${car.priceUsd.toLocaleString()}` : 'N/A'}
                 </span>
               </div>
 
@@ -118,19 +114,27 @@ export const CarDetailPage: React.FC = () => {
               <div className="grid grid-cols-2 gap-3 mt-6 pt-6 border-t border-black/10 font-mono">
                 <div className="p-3 bg-white/60 rounded border border-black/5">
                   <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Peak Horsepower</span>
-                  <span className="text-xl font-extrabold text-[#14110f]">{car.horsepower} <span className="text-xs font-normal text-neutral-500">HP</span></span>
+                  <span className="text-xl font-extrabold text-[#14110f]">
+                    {typeof car.horsepower === 'number' ? `${car.horsepower} HP` : 'N/A'}
+                  </span>
                 </div>
                 <div className="p-3 bg-white/60 rounded border border-black/5">
                   <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Top Speed</span>
-                  <span className="text-xl font-extrabold text-[#14110f]">{car.topSpeedMph} MPH / {Math.round(car.topSpeedMph * 1.60934)} KPH</span>
+                  <span className="text-xl font-extrabold text-[#14110f]">
+                    {typeof car.topSpeedMph === 'number' ? `${car.topSpeedMph} MPH / ${Math.round(car.topSpeedMph * 1.60934)} KPH` : 'N/A'}
+                  </span>
                 </div>
-                 <div className="p-3 bg-white/60 rounded border border-black/5">
+                <div className="p-3 bg-white/60 rounded border border-black/5">
                   <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">0-60 MPH Acceleration</span>
-                  <span className="text-xl font-extrabold text-[#14110f]">{car.zeroToSixtyS !== null ? `${car.zeroToSixtyS}s` : 'N/A'}</span>
+                  <span className="text-xl font-extrabold text-[#14110f]">
+                    {typeof car.zeroToSixtyS === 'number' ? `${car.zeroToSixtyS}s` : 'N/A'}
+                  </span>
                 </div>
                 <div className="p-3 bg-white/60 rounded border border-black/5">
                   <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Power-To-Weight</span>
-                  <span className="text-xl font-extrabold text-[#C63A16]">{powerToWeightRatio} <span className="text-xs font-normal text-neutral-500">hp/ton</span></span>
+                  <span className="text-xl font-extrabold text-[#C63A16]">
+                    {powerToWeightRatio !== 'N/A' ? `${powerToWeightRatio} hp/ton` : 'N/A'}
+                  </span>
                 </div>
               </div>
             </div>
@@ -146,7 +150,7 @@ export const CarDetailPage: React.FC = () => {
                 {saved ? 'Saved in Garage' : 'Add to Garage'}
               </GlassButton>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
 
@@ -164,19 +168,27 @@ export const CarDetailPage: React.FC = () => {
           <ul className="space-y-4 font-mono text-xs">
             <li className="flex justify-between items-center py-1 border-b border-black/5">
               <span className="text-neutral-500 uppercase">Horsepower</span>
-              <span className="font-bold text-[#14110f] text-sm">{car.horsepower} HP</span>
+              <span className="font-bold text-[#14110f] text-sm">
+                {typeof car.horsepower === 'number' ? `${car.horsepower} HP` : 'N/A'}
+              </span>
             </li>
              <li className="flex justify-between items-center py-1 border-b border-black/5">
               <span className="text-neutral-500 uppercase">Peak Torque</span>
-              <span className="font-bold text-[#14110f] text-sm">{car.torqueLbFt !== null ? `${car.torqueLbFt} lb-ft` : 'N/A'}</span>
+              <span className="font-bold text-[#14110f] text-sm">
+                {typeof car.torqueLbFt === 'number' ? `${car.torqueLbFt} lb-ft` : 'N/A'}
+              </span>
             </li>
             <li className="flex justify-between items-center py-1 border-b border-black/5">
               <span className="text-neutral-500 uppercase">0–60 MPH Sprint</span>
-              <span className="font-bold text-[#14110f] text-sm">{car.zeroToSixtyS !== null ? `${car.zeroToSixtyS} seconds` : 'N/A'}</span>
+              <span className="font-bold text-[#14110f] text-sm">
+                {typeof car.zeroToSixtyS === 'number' ? `${car.zeroToSixtyS}s` : 'N/A'}
+              </span>
             </li>
             <li className="flex justify-between items-center py-1 border-b border-black/5">
               <span className="text-neutral-500 uppercase">Top Speed</span>
-              <span className="font-bold text-[#14110f] text-sm">{car.topSpeedMph} MPH / {Math.round(car.topSpeedMph * 1.60934)} KPH</span>
+              <span className="font-bold text-[#14110f] text-sm">
+                {typeof car.topSpeedMph === 'number' ? `${car.topSpeedMph} MPH / ${Math.round(car.topSpeedMph * 1.60934)} KPH` : 'N/A'}
+              </span>
             </li>
             <li className="flex justify-between items-center py-1">
               <span className="text-neutral-500 uppercase">Prestige Score</span>
@@ -202,12 +214,14 @@ export const CarDetailPage: React.FC = () => {
             <li className="flex justify-between items-center py-1 border-b border-black/5">
               <span className="text-neutral-500 uppercase">Displacement</span>
               <span className="font-bold text-[#14110f]">
-                {car.engine.displacementL ? `${car.engine.displacementL} Liters` : 'Electric'}
+                {typeof car.engine.displacementL === 'number' ? `${car.engine.displacementL} Liters` : 'N/A'}
               </span>
             </li>
             <li className="flex justify-between items-center py-1 border-b border-black/5">
               <span className="text-neutral-500 uppercase">Cylinders</span>
-              <span className="font-bold text-[#14110f]">{car.engine.cylinders ?? 'N/A (EV)'}</span>
+              <span className="font-bold text-[#14110f]">
+                {typeof car.engine.cylinders === 'number' ? car.engine.cylinders : 'N/A'}
+              </span>
             </li>
             <li className="flex justify-between items-center py-1 border-b border-black/5">
               <span className="text-neutral-500 uppercase">Engine Layout</span>

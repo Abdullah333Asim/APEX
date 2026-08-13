@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Trophy, Zap, Crown, Flame, Shield, ArrowRight ,Battery} from 'lucide-react';
+import { Trophy, Zap, Crown, Flame, Shield, ArrowRight, Battery } from 'lucide-react';
 import { useBracketStore, BracketCategory } from '../store/useBracketStore';
+import { getCarsByCategory } from '../data/carsData';
 import { GlassButton } from '../components/ui/GlassButton';
 import { useDocumentHead } from '../hooks/useDocumentHead';
 
@@ -19,13 +20,33 @@ export const BracketSetupPage: React.FC = () => {
     navigate('/bracket/play');
   };
 
+  const counts = useMemo(() => ({
+    normal: getCarsByCategory('normal').length,
+    luxury: getCarsByCategory('luxury').length,
+    hyper: getCarsByCategory('hyper').length,
+    f1: getCarsByCategory('f1').length,
+  }), []);
+
   const divisions = [
+        {
+      id: 'f1' as BracketCategory,
+      title: 'Formula 1 Division',
+      subtitle: 'V10 Screamers, Blown Diffusers & Hybrid Monsters',
+      badge: `${counts.f1} Machines`,
+      icon: <Battery className="w-6 h-6 text-[#58fe05]" />,
+      avgHp: '~900 HP',
+      avgPrice: '$15M - $20M',
+      examples: 'Ferrari F2004, Mercedes W11, Brawn BGP 001, Red Bull RB19',
+      description: 'The absolute pinnacle of motorsport engineering. Open-wheel monocoques, 15,000 RPM ceilings, and hyper-advanced aerodynamic downforce.',
+      image: '/f1/renault-r25-2005.jpg',
+      accentBg: 'hover:border-[#C63A16]',
+    },
     {
       id: 'normal' as BracketCategory,
       title: 'Normal Division',
       subtitle: 'Hot Hatches, Sports Coupes & Rally Icons',
-      badge: '20 Machines',
-      icon: <Zap className="w-6 h-6 text-[#14110f]" />,
+      badge: `${counts.normal} Machines`,
+      icon: <Zap className="w-6 h-6 text-[#ff6600]" />,
       avgHp: '~320 HP',
       avgPrice: '$32k - $72k',
       examples: 'Toyota GR Supra, Civic Type R, Golf R, Mustang GT, WRX STI',
@@ -37,7 +58,7 @@ export const BracketSetupPage: React.FC = () => {
       id: 'luxury' as BracketCategory,
       title: 'Luxury Division',
       subtitle: 'Supercars, GTs & High-Rev V8/V10 Coupes',
-      badge: '30 Machines',
+      badge: `${counts.luxury} Machines`,
       icon: <Trophy className="w-6 h-6 text-[#C63A16]" />,
       avgHp: '~620 HP',
       avgPrice: '$85k - $340k',
@@ -51,7 +72,7 @@ export const BracketSetupPage: React.FC = () => {
       id: 'hyper' as BracketCategory,
       title: 'Hyper Division',
       subtitle: 'Halo Megacars, Holy Trinity & V16 Weapons',
-      badge: '22 Machines',
+      badge: `${counts.hyper} Machines`,
       icon: <Crown className="w-6 h-6 text-[#f0cf13]" />,
       avgHp: '~1,350 HP',
       avgPrice: '$1.0M - $4.1M',
@@ -60,33 +81,14 @@ export const BracketSetupPage: React.FC = () => {
       image: '/cars/koenigsegg-jesko-attack-2023.jpg',
       accentBg: 'hover:border-[#14110f]',
     },
-    {
-      id: 'f1' as BracketCategory,
-      title: 'Formula 1 Division',
-      subtitle: 'V10 Screamers, Blown Diffusers & Hybrid Monsters',
-      badge: '16 Machines',
-      icon: <Battery className="w-6 h-6 text-[#58fe05]" />,
-      avgHp: '~900 HP',
-      avgPrice: '$12.0M - $18.0M',
-      examples: 'Ferrari F2004, Mercedes W11, Brawn BGP 001, Red Bull RB19',
-      description: 'The absolute pinnacle of motorsport engineering. Open-wheel monocoques, 15,000 RPM ceilings, and hyper-advanced aerodynamic downforce.',
-      image: '/f1/renault-r25-2005.jpg',
-      accentBg: 'hover:border-[#C63A16]',
-    },
+
   ];
 
   return (
     <div className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full flex flex-col justify-between">
       {/* Header Section */}
       <div className="text-center max-w-3xl mx-auto mb-12">
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-black/5 border border-black/10 text-[11px] font-mono font-bold uppercase tracking-widest text-[#C63A16] mb-4"
-        >
-          <Flame className="w-3.5 h-3.5 fill-current" />
-          <span>Tournament Mode</span>
-        </motion.div>
+        
         <h1 className="text-3xl sm:text-5xl font-extrabold uppercase text-[#14110f] tracking-tight">
           Select Your Division
         </h1>

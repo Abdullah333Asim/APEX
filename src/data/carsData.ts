@@ -34,17 +34,20 @@ export const getStatRanges = (cars: Car[] = allCars): StatRanges => {
     return { minHp: 0, maxHp: 2000, minPrice: 0, maxPrice: 5000000, minSpeed: 0, maxSpeed: 320, minYear: 2000, maxYear: 2026 };
   }
 
-  const priceCars = cars.map((c) => c.priceUsd).filter((p): p is number => p !== null);
+  const hpCars = cars.map((c) => c.horsepower).filter((h): h is number => typeof h === 'number');
+  const priceCars = cars.map((c) => c.priceUsd).filter((p): p is number => typeof p === 'number');
+  const speedCars = cars.map((c) => c.topSpeedMph).filter((s): s is number => typeof s === 'number');
+  const yearCars = cars.map((c) => c.year);
 
   return {
-    minHp: Math.min(...cars.map((c) => c.horsepower)),
-    maxHp: Math.max(...cars.map((c) => c.horsepower)),
+    minHp: hpCars.length > 0 ? Math.min(...hpCars) : 0,
+    maxHp: hpCars.length > 0 ? Math.max(...hpCars) : 2000,
     minPrice: priceCars.length > 0 ? Math.min(...priceCars) : 0,
-    maxPrice: priceCars.length > 0 ? Math.max(...priceCars) : 0,
-    minSpeed: Math.min(...cars.map((c) => c.topSpeedMph)),
-    maxSpeed: Math.max(...cars.map((c) => c.topSpeedMph)),
-    minYear: Math.min(...cars.map((c) => c.year)),
-    maxYear: Math.max(...cars.map((c) => c.year)),
+    maxPrice: priceCars.length > 0 ? Math.max(...priceCars) : 5000000,
+    minSpeed: speedCars.length > 0 ? Math.min(...speedCars) : 0,
+    maxSpeed: speedCars.length > 0 ? Math.max(...speedCars) : 320,
+    minYear: yearCars.length > 0 ? Math.min(...yearCars) : 2000,
+    maxYear: yearCars.length > 0 ? Math.max(...yearCars) : 2026,
   };
 };
 
@@ -118,29 +121,31 @@ export const filterCars = (params: FilterParams): Car[] => {
 
   // Horsepower range
   if (minHp !== undefined) {
-    result = result.filter((car) => car.horsepower >= minHp);
+    result = result.filter((car) => typeof car.horsepower === 'number' && car.horsepower >= minHp);
   }
   if (maxHp !== undefined) {
-    result = result.filter((car) => car.horsepower <= maxHp);
+    result = result.filter((car) => typeof car.horsepower === 'number' && car.horsepower <= maxHp);
   }
 
   // Price range
   if (minPrice !== undefined) {
-    result = result.filter((car) => car.priceUsd !== null && car.priceUsd >= minPrice);
+    result = result.filter((car) => typeof car.priceUsd === 'number' && car.priceUsd >= minPrice);
   }
   if (maxPrice !== undefined) {
-    result = result.filter((car) => car.priceUsd !== null && car.priceUsd <= maxPrice);
+    result = result.filter((car) => typeof car.priceUsd === 'number' && car.priceUsd <= maxPrice);
   }
 
-  // Sorting
+  // Sorting: "N/A" and null values sort to the end of the list regardless of asc/desc
   result.sort((a, b) => {
     const valA = getCarSortValue(a, sortBy);
     const valB = getCarSortValue(b, sortBy);
 
-    if (valA === null || valB === null) {
-      // Sort nulls (e.g. F1 cars without price) to the bottom regardless of sort order
-      if (valA === null && valB === null) return 0;
-      return valA === null ? 1 : -1;
+    const isNA_A = valA === 'N/A' || valA === null || valA === undefined;
+    const isNA_B = valB === 'N/A' || valB === null || valB === undefined;
+
+    if (isNA_A || isNA_B) {
+      if (isNA_A && isNA_B) return 0;
+      return isNA_A ? 1 : -1; // N/A always goes to bottom
     }
 
     if (typeof valA === 'string' && typeof valB === 'string') {
@@ -161,10 +166,10 @@ export const filterCars = (params: FilterParams): Car[] => {
 /**
  * Format prices:
  * - Below 1 million: show as 'k' (rounded to nearest integer, e.g. 250k)
- * - 1 million or above: show as 'm' to the nearest 3 decimal places (stripping redundant trailing zeros, e.g. 1.25m, 1.005m)
+ * - 1 million or above: show as 'm' to the nearest 3 decimal places
  */
-export const formatCompactPrice = (value: number | null | undefined): string => {
-  if (value === null || value === undefined) {
+export const formatCompactPrice = (value: number | "N/A" | null | undefined): string => {
+  if (value === null || value === undefined || value === 'N/A') {
     return 'N/A';
   }
   if (value < 1000000) {

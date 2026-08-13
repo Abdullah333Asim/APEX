@@ -22,10 +22,15 @@ export const GaragePage: React.FC = () => {
   const metrics = useMemo(() => {
     if (savedCars.length === 0) return null;
 
-    const totalValue = savedCars.reduce((sum, c) => sum + (c.priceUsd || 0), 0);
-    const avgHp = Math.round(savedCars.reduce((sum, c) => sum + c.horsepower, 0) / savedCars.length);
-    const maxSpeed = Math.max(...savedCars.map((c) => c.topSpeedMph));
-    
+    const priceCars = savedCars.map((c) => c.priceUsd).filter((p): p is number => typeof p === 'number');
+    const totalValue = priceCars.reduce((sum, p) => sum + p, 0);
+
+    const hpCars = savedCars.map((c) => c.horsepower).filter((h): h is number => typeof h === 'number');
+    const avgHp = hpCars.length > 0 ? Math.round(hpCars.reduce((sum, h) => sum + h, 0) / hpCars.length) : 'N/A';
+
+    const speedCars = savedCars.map((c) => c.topSpeedMph).filter((s): s is number => typeof s === 'number');
+    const maxSpeed = speedCars.length > 0 ? Math.max(...speedCars) : 'N/A';
+
     // Find car with highest prestige
     const highestPrestigeCar = savedCars.reduce((prev, current) => {
       const pPrev = prev.prestige ?? 5;
@@ -115,7 +120,7 @@ export const GaragePage: React.FC = () => {
               <div>
                 <span className="text-[10px] text-neutral-400 uppercase tracking-wider block mb-1">Top Speed Peak</span>
                 <span className="text-xl sm:text-2xl font-extrabold text-[#14110f]">
-                  {metrics.maxSpeed} MPH / {Math.round(metrics.maxSpeed * 1.60934)} KPH
+                  {typeof metrics.maxSpeed === 'number' ? `${metrics.maxSpeed} MPH / ${Math.round(metrics.maxSpeed * 1.60934)} KPH` : 'N/A'}
                 </span>
               </div>
               <div>
@@ -173,11 +178,15 @@ export const GaragePage: React.FC = () => {
                     <div className="grid grid-cols-2 gap-2.5 my-4 pt-3 border-t border-black/10 font-mono text-xs">
                       <div>
                         <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Power</span>
-                        <span className="font-bold text-[#14110f]">{car.horsepower} HP</span>
+                        <span className="font-bold text-[#14110f]">
+                          {typeof car.horsepower === 'number' ? `${car.horsepower} HP` : 'N/A'}
+                        </span>
                       </div>
                       <div>
                         <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Top Speed</span>
-                        <span className="font-bold text-[#14110f] text-[11px] sm:text-xs whitespace-nowrap tracking-tight block">{car.topSpeedMph} MPH / {Math.round(car.topSpeedMph * 1.60934)} KPH</span>
+                        <span className="font-bold text-[#14110f] text-[11px] sm:text-xs whitespace-nowrap tracking-tight block">
+                          {typeof car.topSpeedMph === 'number' ? `${car.topSpeedMph} MPH / ${Math.round(car.topSpeedMph * 1.60934)} KPH` : 'N/A'}
+                        </span>
                       </div>
                       {car.category === 'f1' ? (
                         <>
@@ -188,19 +197,23 @@ export const GaragePage: React.FC = () => {
                           <div>
                             <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Weight</span>
                             <span className="font-bold text-[#C63A16] text-[11px] sm:text-xs block tracking-tighter truncate">
-                              {car.weightLbs.toLocaleString()} lbs / {Math.round(car.weightLbs * 0.45359237)} kg
+                              {typeof car.weightLbs === 'number' ? `${car.weightLbs.toLocaleString()} lbs / ${Math.round(car.weightLbs * 0.45359237)} kg` : 'N/A'}
                             </span>
                           </div>
                         </>
                       ) : (
                         <>
                           <div>
-                            <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">0-60 MPH</span>
-                            <span className="font-bold text-[#14110f]">{car.zeroToSixtyS !== null ? `${car.zeroToSixtyS}s` : 'N/A'}</span>
+                            <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">0–60 MPH</span>
+                            <span className="font-bold text-[#14110f]">
+                              {typeof car.zeroToSixtyS === 'number' ? `${car.zeroToSixtyS}s` : 'N/A'}
+                            </span>
                           </div>
                           <div>
-                            <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">MSRP</span>
-                            <span className="font-bold text-[#C63A16]">{car.priceUsd !== null ? `$${car.priceUsd.toLocaleString()}` : 'N/A'}</span>
+                            <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Price</span>
+                            <span className="font-bold text-[#C63A16]">
+                              {typeof car.priceUsd === 'number' ? `$${car.priceUsd.toLocaleString()}` : 'N/A'}
+                            </span>
                           </div>
                         </>
                       )}

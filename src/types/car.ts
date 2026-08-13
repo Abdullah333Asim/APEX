@@ -1,7 +1,7 @@
 export interface CarEngine {
   type: string;
-  displacementL: number | null;
-  cylinders: number | null;
+  displacementL: number | "N/A" | null;
+  cylinders: number | "N/A" | null;
   layout: string;
 }
 
@@ -13,12 +13,12 @@ export interface Car {
   category: "normal" | "luxury" | "hyper" | "f1";
   image: string;
   engine: CarEngine;
-  horsepower: number;
-  torqueLbFt: number | null;
-  topSpeedMph: number;
-  zeroToSixtyS: number | null;
-  priceUsd: number | null;
-  weightLbs: number;
+  horsepower: number | "N/A";
+  torqueLbFt: number | "N/A" | null;
+  topSpeedMph: number | "N/A";
+  zeroToSixtyS: number | "N/A" | null;
+  priceUsd: number | "N/A" | null;
+  weightLbs: number | "N/A";
   drivetrain: string;
   transmission: string;
   country: string;

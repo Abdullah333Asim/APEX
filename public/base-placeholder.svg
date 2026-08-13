@@ -1,0 +1,27 @@
+<svg viewBox="0 0 1200 800" width="1200" height="800" xmlns="http://www.w3.org/2000/svg">
+  <!-- Carbon dark background -->
+  <rect width="1200" height="800" fill="#14110f" />
+
+  <!-- Subtle grid lines -->
+  <line x1="0" y1="400" x2="1200" y2="400" stroke="#ffffff" stroke-opacity="0.04" stroke-width="2"/>
+  <line x1="600" y1="0" x2="600" y2="800" stroke="#ffffff" stroke-opacity="0.04" stroke-width="2"/>
+  
+  <!-- Subtle border accent -->
+  <rect x="40" y="40" width="1120" height="720" rx="12" fill="none" stroke="#C63A16" stroke-width="2" stroke-opacity="0.25"/>
+
+  <!-- Centered Minimalist Car Silhouette / Speed Icon -->
+  <g transform="translate(450, 310) scale(1.5)">
+    <!-- Sleek Aerodynamic Car Silhouette -->
+    <path
+      d="M 10 70 C 40 68, 70 45, 90 35 C 110 25, 140 25, 160 35 C 175 42, 190 60, 200 70 L 210 70 C 215 70, 220 75, 218 80 C 215 88, 200 90, 190 90 L 20 90 C 10 90, 2 85, 2 80 C 2 75, 5 70, 10 70 Z"
+      fill="#221e1b"
+      stroke="#C63A16"
+      stroke-width="3"
+    />
+    <!-- Wheel cutouts -->
+    <circle cx="45" cy="90" r="18" fill="#14110f" stroke="#ffffff" stroke-opacity="0.4" stroke-width="3"/>
+    <circle cx="165" cy="90" r="18" fill="#14110f" stroke="#ffffff" stroke-opacity="0.4" stroke-width="3"/>
+    <!-- Headlight beam accent -->
+    <polygon points="210,74 235,71 230,79" fill="#C63A16" opacity="0.8"/>
+  </g>
+</svg>

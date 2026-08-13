@@ -302,11 +302,15 @@ export const CatalogPage: React.FC = () => {
                     <div className="grid grid-cols-2 gap-2.5 my-4 pt-3 border-t border-black/5 font-mono text-xs">
                       <div>
                         <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Power</span>
-                        <span className="font-bold text-[#14110f]">{car.horsepower} HP</span>
+                        <span className="font-bold text-[#14110f]">
+                          {typeof car.horsepower === 'number' ? `${car.horsepower} HP` : 'N/A'}
+                        </span>
                       </div>
                       <div>
                         <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Top Speed</span>
-                        <span className="font-bold text-[#14110f] text-[11px] sm:text-xs whitespace-nowrap tracking-tight block">{car.topSpeedMph} MPH / {Math.round(car.topSpeedMph * 1.60934)} KPH</span>
+                        <span className="font-bold text-[#14110f] text-[11px] sm:text-xs whitespace-nowrap tracking-tight block">
+                          {typeof car.topSpeedMph === 'number' ? `${car.topSpeedMph} MPH / ${Math.round(car.topSpeedMph * 1.60934)} KPH` : 'N/A'}
+                        </span>
                       </div>
                       {car.category === 'f1' ? (
                         <>
@@ -317,19 +321,21 @@ export const CatalogPage: React.FC = () => {
                           <div>
                             <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Weight</span>
                             <span className="font-bold text-[#C63A16] text-[11px] sm:text-xs block tracking-tighter truncate">
-                              {car.weightLbs.toLocaleString()} lbs / {Math.round(car.weightLbs * 0.45359237)} kg
+                              {typeof car.weightLbs === 'number' ? `${car.weightLbs.toLocaleString()} lbs / ${Math.round(car.weightLbs * 0.45359237)} kg` : 'N/A'}
                             </span>
                           </div>
                         </>
                       ) : (
                         <>
                           <div>
-                            <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">0-60 MPH</span>
-                            <span className="font-bold text-[#14110f]">{car.zeroToSixtyS !== null ? `${car.zeroToSixtyS}s` : 'N/A'}</span>
+                            <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">0–60 MPH</span>
+                            <span className="font-bold text-[#14110f]">
+                              {typeof car.zeroToSixtyS === 'number' ? `${car.zeroToSixtyS}s` : 'N/A'}
+                            </span>
                           </div>
                           <div>
-                            <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Price</span>
-                            <span className="font-bold text-[#C63A16]">{car.priceUsd !== null ? `$${car.priceUsd.toLocaleString()}` : 'N/A'}</span>
+                            <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Engine Type</span>
+                            <span className="font-bold text-[#14110f] truncate block" title={car.engine.type}>{car.engine.type}</span>
                           </div>
                         </>
                       )}

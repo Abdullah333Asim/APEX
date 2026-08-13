@@ -259,15 +259,18 @@ const CompetitorCard: React.FC<CompetitorCardProps> = ({
             {car.blurb}
           </p>
         </div>
-
-        <div className="grid grid-cols-2 gap-3 my-5 pt-4 border-t border-black/10 font-mono text-xs">
+                <div className="grid grid-cols-2 gap-3 my-5 pt-4 border-t border-black/10 font-mono text-xs">
           <div className="p-2.5 bg-black/5 rounded">
             <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Horsepower</span>
-            <span className="text-lg font-extrabold text-[#14110f]">{car.horsepower} <span className="text-xs font-normal text-neutral-500">HP</span></span>
+            <span className="text-lg font-extrabold text-[#14110f]">
+              {typeof car.horsepower === 'number' ? `${car.horsepower} HP` : 'N/A'}
+            </span>
           </div>
           <div className="p-2.5 bg-black/5 rounded">
             <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Top Speed</span>
-            <span className="text-lg font-extrabold text-[#14110f]">{car.topSpeedMph} MPH / {Math.round(car.topSpeedMph * 1.60934)} KPH</span>
+            <span className="text-lg font-extrabold text-[#14110f]">
+              {typeof car.topSpeedMph === 'number' ? `${car.topSpeedMph} MPH / ${Math.round(car.topSpeedMph * 1.60934)} KPH` : 'N/A'}
+            </span>
           </div>
           {car.category === 'f1' ? (
             <>
@@ -278,7 +281,7 @@ const CompetitorCard: React.FC<CompetitorCardProps> = ({
               <div className="p-2.5 bg-black/5 rounded">
                 <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Weight</span>
                 <span className="text-xs font-bold text-[#C63A16] block tracking-tighter truncate">
-                  {car.weightLbs.toLocaleString()} lbs / {Math.round(car.weightLbs * 0.45359237)} kg
+                  {typeof car.weightLbs === 'number' ? `${car.weightLbs.toLocaleString()} lbs / ${Math.round(car.weightLbs * 0.45359237)} kg` : 'N/A'}
                 </span>
               </div>
             </>
@@ -286,7 +289,9 @@ const CompetitorCard: React.FC<CompetitorCardProps> = ({
             <>
               <div className="p-2.5 bg-black/5 rounded">
                 <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">0–60 MPH</span>
-                <span className="text-lg font-extrabold text-[#14110f]">{car.zeroToSixtyS !== null ? `${car.zeroToSixtyS}s` : 'N/A'}</span>
+                <span className="text-lg font-extrabold text-[#14110f]">
+                  {typeof car.zeroToSixtyS === 'number' ? `${car.zeroToSixtyS}s` : 'N/A'}
+                </span>
               </div>
               <div className="p-2.5 bg-black/5 rounded">
                 <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Engine Type</span>
@@ -332,7 +337,7 @@ const CarSpecsModal: React.FC<CarSpecsModalProps> = ({ car, onClose, onSelectCar
 
   if (!car) return null;
 
-  const powerToWeightRatio = car.horsepower && car.weightLbs
+  const powerToWeightRatio = typeof car.horsepower === 'number' && typeof car.weightLbs === 'number' && car.weightLbs > 0
     ? ((car.horsepower / car.weightLbs) * 2000).toFixed(1)
     : 'N/A';
 
@@ -390,7 +395,7 @@ const CarSpecsModal: React.FC<CarSpecsModalProps> = ({ car, onClose, onSelectCar
               {car.country}
             </div>
             <div className="absolute bottom-3 left-3 bg-white/95 text-[#C63A16] backdrop-blur-md px-3 py-1.5 rounded text-xs font-mono font-extrabold shadow">
-              {car.priceUsd !== null ? `MSRP $${car.priceUsd.toLocaleString()}` : 'MSRP: N/A (Race Spec)'}
+              {typeof car.priceUsd === 'number' ? `MSRP $${car.priceUsd.toLocaleString()}` : 'MSRP: N/A'}
             </div>
           </div>
 
@@ -410,11 +415,15 @@ const CarSpecsModal: React.FC<CarSpecsModalProps> = ({ car, onClose, onSelectCar
             <div className="mt-6 pt-6 border-t border-black/10 flex flex-wrap gap-4">
               <div className="flex-1 min-w-[140px] p-3 bg-[#f7f5f2] rounded border border-black/5">
                 <span className="text-[10px] font-mono text-neutral-500 uppercase tracking-wider block">Peak Output</span>
-                <span className="text-xl font-extrabold text-[#14110f] font-mono">{car.horsepower} HP</span>
+                <span className="text-xl font-extrabold text-[#14110f] font-mono">
+                  {typeof car.horsepower === 'number' ? `${car.horsepower} HP` : 'N/A'}
+                </span>
               </div>
               <div className="flex-1 min-w-[140px] p-3 bg-[#f7f5f2] rounded border border-black/5">
                 <span className="text-[10px] font-mono text-neutral-500 uppercase tracking-wider block">Top Velocity</span>
-                <span className="text-xl font-extrabold text-[#14110f] font-mono">{car.topSpeedMph} MPH</span>
+                <span className="text-xl font-extrabold text-[#14110f] font-mono">
+                  {typeof car.topSpeedMph === 'number' ? `${car.topSpeedMph} MPH` : 'N/A'}
+                </span>
               </div>
             </div>
           </div>
@@ -430,31 +439,37 @@ const CarSpecsModal: React.FC<CarSpecsModalProps> = ({ car, onClose, onSelectCar
             {/* Spec Card 1: Power */}
             <div className="bg-white p-4 rounded-sm border border-black/10 shadow-sm">
               <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-bold">Horsepower Rating</span>
-              <span className="text-2xl font-extrabold text-[#14110f] mt-1 block">{car.horsepower} <span className="text-xs font-normal text-neutral-500">HP</span></span>
+              <span className="text-2xl font-extrabold text-[#14110f] mt-1 block">
+                {typeof car.horsepower === 'number' ? `${car.horsepower} HP` : 'N/A'}
+              </span>
               <span className="text-[11px] text-neutral-500 mt-1 block">Total engine power output</span>
             </div>
 
             {/* Spec Card 2: Top Speed */}
             <div className="bg-white p-4 rounded-sm border border-black/10 shadow-sm">
               <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-bold">Top Speed</span>
-              <span className="text-2xl font-extrabold text-[#14110f] mt-1 block">{car.topSpeedMph} <span className="text-xs font-normal text-neutral-500">MPH</span></span>
-              <span className="text-[11px] text-[#C63A16] font-bold mt-1 block">{Math.round(car.topSpeedMph * 1.60934)} KPH</span>
+              <span className="text-2xl font-extrabold text-[#14110f] mt-1 block">
+                {typeof car.topSpeedMph === 'number' ? `${car.topSpeedMph} MPH` : 'N/A'}
+              </span>
+              <span className="text-[11px] text-[#C63A16] font-bold mt-1 block">
+                {typeof car.topSpeedMph === 'number' ? `${Math.round(car.topSpeedMph * 1.60934)} KPH` : 'N/A'}
+              </span>
             </div>
 
             {/* Spec Card 3: Acceleration / 0-60 */}
             <div className="bg-white p-4 rounded-sm border border-black/10 shadow-sm">
               <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-bold">0–60 MPH Sprint</span>
               <span className="text-2xl font-extrabold text-[#14110f] mt-1 block">
-                {car.zeroToSixtyS !== null ? `${car.zeroToSixtyS}s` : 'N/A'}
+                {typeof car.zeroToSixtyS === 'number' ? `${car.zeroToSixtyS}s` : 'N/A'}
               </span>
-              <span className="text-[11px] text-neutral-500 mt-1 block">Standing launch time</span>
+              <span className="text-[11px] text-neutral-500 mt-1 block font-mono">Standing launch time</span>
             </div>
 
             {/* Spec Card 4: Torque */}
             <div className="bg-white p-4 rounded-sm border border-black/10 shadow-sm">
               <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-bold">Peak Torque</span>
               <span className="text-2xl font-extrabold text-[#14110f] mt-1 block">
-                {car.torqueLbFt !== null ? `${car.torqueLbFt} lb-ft` : 'N/A'}
+                {typeof car.torqueLbFt === 'number' ? `${car.torqueLbFt} lb-ft` : 'N/A'}
               </span>
               <span className="text-[11px] text-neutral-500 mt-1 block">Rotational engine force</span>
             </div>
@@ -462,14 +477,20 @@ const CarSpecsModal: React.FC<CarSpecsModalProps> = ({ car, onClose, onSelectCar
             {/* Spec Card 5: Curb Weight */}
             <div className="bg-white p-4 rounded-sm border border-black/10 shadow-sm">
               <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-bold">Curb Weight</span>
-              <span className="text-2xl font-extrabold text-[#14110f] mt-1 block">{car.weightLbs.toLocaleString()} <span className="text-xs font-normal text-neutral-500">lbs</span></span>
-              <span className="text-[11px] text-[#C63A16] font-bold mt-1 block">{Math.round(car.weightLbs * 0.45359237).toLocaleString()} kg</span>
+              <span className="text-2xl font-extrabold text-[#14110f] mt-1 block">
+                {typeof car.weightLbs === 'number' ? `${car.weightLbs.toLocaleString()} lbs` : 'N/A'}
+              </span>
+              <span className="text-[11px] text-[#C63A16] font-bold mt-1 block">
+                {typeof car.weightLbs === 'number' ? `${Math.round(car.weightLbs * 0.45359237).toLocaleString()} kg` : 'N/A'}
+              </span>
             </div>
 
             {/* Spec Card 6: Power to Weight */}
             <div className="bg-white p-4 rounded-sm border border-black/10 shadow-sm">
               <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-bold">Power-to-Weight Ratio</span>
-              <span className="text-2xl font-extrabold text-[#14110f] mt-1 block">{powerToWeightRatio} <span className="text-xs font-normal text-neutral-500">HP/ton</span></span>
+              <span className="text-2xl font-extrabold text-[#14110f] mt-1 block">
+                {powerToWeightRatio !== 'N/A' ? `${powerToWeightRatio} HP/ton` : 'N/A'}
+              </span>
               <span className="text-[11px] text-neutral-500 mt-1 block">HP per 2,000 lbs vehicle mass</span>
             </div>
 
@@ -484,7 +505,7 @@ const CarSpecsModal: React.FC<CarSpecsModalProps> = ({ car, onClose, onSelectCar
             <div className="bg-white p-4 rounded-sm border border-black/10 shadow-sm">
               <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-bold">Displacement & Cylinders</span>
               <span className="text-base font-extrabold text-[#14110f] mt-1 block">
-                {car.engine.displacementL ? `${car.engine.displacementL} Liters` : 'N/A'} ({car.engine.cylinders} Cyl)
+                {typeof car.engine.displacementL === 'number' ? `${car.engine.displacementL} Liters` : 'N/A'} ({typeof car.engine.cylinders === 'number' ? `${car.engine.cylinders} Cyl` : 'N/A'})
               </span>
               <span className="text-[11px] text-neutral-500 mt-1 block">Engine capacity & cylinder count</span>
             </div>
@@ -493,9 +514,8 @@ const CarSpecsModal: React.FC<CarSpecsModalProps> = ({ car, onClose, onSelectCar
             <div className="bg-white p-4 rounded-sm border border-black/10 shadow-sm">
               <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-bold">Original MSRP & Division</span>
               <span className="text-base font-extrabold text-[#C63A16] mt-1 block">
-                {car.priceUsd !== null ? `$${car.priceUsd.toLocaleString()}` : 'N/A (Race Spec)'}
+                {typeof car.priceUsd === 'number' ? `$${car.priceUsd.toLocaleString()}` : 'N/A'}
               </span>
-              <span className="text-[11px] text-neutral-500 mt-1 block">{categoryLabel}</span>
             </div>
           </div>
         </div>

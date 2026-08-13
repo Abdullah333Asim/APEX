@@ -359,15 +359,21 @@ const ChampionShowcase: React.FC<{ car: Car }> = ({ car }) => {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 my-6 p-4 bg-black/5 rounded-sm font-mono text-xs">
               <div>
                 <span className="text-[10px] text-neutral-400 uppercase block">Horsepower</span>
-                <span className="font-extrabold text-[#14110f] text-sm">{car.horsepower} HP</span>
+                <span className="font-extrabold text-[#14110f] text-sm">
+                  {typeof car.horsepower === 'number' ? `${car.horsepower} HP` : 'N/A'}
+                </span>
               </div>
               <div>
                 <span className="text-[10px] text-neutral-400 uppercase block">Top Speed</span>
-                <span className="font-extrabold text-[#14110f] text-sm whitespace-nowrap">{car.topSpeedMph} MPH / {Math.round(car.topSpeedMph * 1.60934)} KPH</span>
+                <span className="font-extrabold text-[#14110f] text-sm whitespace-nowrap">
+                  {typeof car.topSpeedMph === 'number' ? `${car.topSpeedMph} MPH / ${Math.round(car.topSpeedMph * 1.60934)} KPH` : 'N/A'}
+                </span>
               </div>
               <div>
                 <span className="text-[10px] text-neutral-400 uppercase block">0-60 MPH</span>
-                <span className="font-extrabold text-[#14110f] text-sm">{car.zeroToSixtyS !== null ? `${car.zeroToSixtyS}s` : 'N/A'}</span>
+                <span className="font-extrabold text-[#14110f] text-sm">
+                  {typeof car.zeroToSixtyS === 'number' ? `${car.zeroToSixtyS}s` : 'N/A'}
+                </span>
               </div>
               <div>
                 <span className="text-[10px] text-neutral-400 uppercase block">Prestige</span>
@@ -417,29 +423,68 @@ export const BracketResultPage: React.FC = () => {
     if (!winnersHistory || winnersHistory.length === 0) return [];
 
     const bounds = getStatRanges(allCars);
+
+    // Power
+    const hpWinners = winnersHistory.map((c) => c.horsepower).filter((h): h is number => typeof h === 'number');
+    const avgHp = hpWinners.length > 0 ? hpWinners.reduce((acc, h) => acc + h, 0) / hpWinners.length : null;
+
+    // Speed
+    const speedWinners = winnersHistory.map((c) => c.topSpeedMph).filter((s): s is number => typeof s === 'number');
+    const avgSpeed = speedWinners.length > 0 ? speedWinners.reduce((acc, s) => acc + s, 0) / speedWinners.length : null;
+
+    // Price
+    const priceWinners = winnersHistory.map((c) => c.priceUsd).filter((p): p is number => typeof p === 'number');
+    const avgPrice = priceWinners.length > 0 ? priceWinners.reduce((acc, p) => acc + p, 0) / priceWinners.length : null;
+
+    // Agility (P2W)
+    const allP2W = allCars
+      .map((c) => (typeof c.horsepower === 'number' && typeof c.weightLbs === 'number' && c.weightLbs > 0 ? c.horsepower / c.weightLbs : null))
+      .filter((p): p is number => p !== null);
+    const minP2W = allP2W.length > 0 ? Math.min(...allP2W) : 0.1;
+    const maxP2W = allP2W.length > 0 ? Math.max(...allP2W) : 1.0;
+
+    const winnerP2W = winnersHistory
+      .map((c) => (typeof c.horsepower === 'number' && typeof c.weightLbs === 'number' && c.weightLbs > 0 ? c.horsepower / c.weightLbs : null))
+      .filter((p): p is number => p !== null);
+    const avgP2W = winnerP2W.length > 0 ? winnerP2W.reduce((acc, p) => acc + p, 0) / winnerP2W.length : null;
+
+    // Prestige
     const n = winnersHistory.length;
-
-    const avgHp    = winnersHistory.reduce((acc, c) => acc + c.horsepower, 0) / n;
-    const avgSpeed = winnersHistory.reduce((acc, c) => acc + c.topSpeedMph, 0) / n;
-
-    const priceCars = winnersHistory.filter((c) => c.priceUsd !== null);
-    const avgPrice  = priceCars.length > 0 ? priceCars.reduce((acc, c) => acc + c.priceUsd!, 0) / priceCars.length : null;
-
-    const allP2W = allCars.map((c) => c.horsepower / c.weightLbs);
-    const minP2W = Math.min(...allP2W);
-    const maxP2W = Math.max(...allP2W);
-    const avgP2W = winnersHistory.reduce((acc, c) => acc + c.horsepower / c.weightLbs, 0) / n;
-
     const avgPrestige = winnersHistory.reduce((acc, c) => acc + (c.prestige ?? 5), 0) / n;
 
     const clamp = (v: number) => Math.round(Math.min(100, Math.max(0, v)));
 
+    const hpDenom = bounds.maxHp - bounds.minHp || 1;
+    const speedDenom = bounds.maxSpeed - bounds.minSpeed || 1;
+    const priceDenom = bounds.maxPrice - bounds.minPrice || 1;
+    const p2wDenom = maxP2W - minP2W || 1;
+
     return [
-      { axis: 'Power',   score: clamp(((avgHp    - bounds.minHp)    / (bounds.maxHp    - bounds.minHp))    * 100), raw: `${Math.round(avgHp)} HP` },
-      { axis: 'Speed',   score: clamp(((avgSpeed - bounds.minSpeed) / (bounds.maxSpeed - bounds.minSpeed)) * 100), raw: `${Math.round(avgSpeed)} MPH / ${Math.round(avgSpeed * 1.60934)} KPH` },
-      { axis: 'Value',   score: avgPrice !== null ? clamp(((bounds.maxPrice - avgPrice)  / (bounds.maxPrice - bounds.minPrice)) * 100) : 0, raw: avgPrice !== null ? `$${Math.round(avgPrice).toLocaleString()}` : 'N/A' },
-      { axis: 'Agility', score: clamp(((avgP2W   - minP2W)          / (maxP2W          - minP2W))          * 100), raw: `${(avgP2W * 2000).toFixed(1)} hp/ton` },
-      { axis: 'Prestige',score: clamp(((avgPrestige - 1) / 9)       * 100),                                        raw: `${avgPrestige.toFixed(1)} / 10` },
+      {
+        axis: 'Power',
+        score: avgHp !== null ? clamp(((avgHp - bounds.minHp) / hpDenom) * 100) : 50,
+        raw: avgHp !== null ? `${Math.round(avgHp)} HP` : 'N/A',
+      },
+      {
+        axis: 'Speed',
+        score: avgSpeed !== null ? clamp(((avgSpeed - bounds.minSpeed) / speedDenom) * 100) : 50,
+        raw: avgSpeed !== null ? `${Math.round(avgSpeed)} MPH / ${Math.round(avgSpeed * 1.60934)} KPH` : 'N/A',
+      },
+      {
+        axis: 'Value',
+        score: avgPrice !== null ? clamp(((bounds.maxPrice - avgPrice) / priceDenom) * 100) : 50,
+        raw: avgPrice !== null ? `$${Math.round(avgPrice).toLocaleString()}` : 'N/A',
+      },
+      {
+        axis: 'Agility',
+        score: avgP2W !== null ? clamp(((avgP2W - minP2W) / p2wDenom) * 100) : 50,
+        raw: avgP2W !== null ? `${(avgP2W * 2000).toFixed(1)} hp/ton` : 'N/A',
+      },
+      {
+        axis: 'Prestige',
+        score: clamp(((avgPrestige - 1) / 9) * 100),
+        raw: `${avgPrestige.toFixed(1)} / 10`,
+      },
     ];
   }, [winnersHistory]);
 
@@ -537,15 +582,21 @@ export const BracketResultPage: React.FC = () => {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 my-6 p-4 bg-black/5 rounded-sm font-mono text-xs">
               <div>
                 <span className="text-[10px] text-neutral-400 uppercase block">Horsepower</span>
-                <span className="font-extrabold text-[#14110f] text-sm">{champion.horsepower} HP</span>
+                <span className="font-extrabold text-[#14110f] text-sm">
+                  {typeof champion.horsepower === 'number' ? `${champion.horsepower} HP` : 'N/A'}
+                </span>
               </div>
               <div>
                 <span className="text-[10px] text-neutral-400 uppercase block">Top Speed</span>
-                <span className="font-extrabold text-[#14110f] text-sm">{champion.topSpeedMph} MPH / {Math.round(champion.topSpeedMph * 1.60934)} KPH</span>
+                <span className="font-extrabold text-[#14110f] text-sm">
+                  {typeof champion.topSpeedMph === 'number' ? `${champion.topSpeedMph} MPH / ${Math.round(champion.topSpeedMph * 1.60934)} KPH` : 'N/A'}
+                </span>
               </div>
               <div>
                 <span className="text-[10px] text-neutral-400 uppercase block">0-60 MPH</span>
-                <span className="font-extrabold text-[#14110f] text-sm">{champion.zeroToSixtyS !== null ? `${champion.zeroToSixtyS}s` : 'N/A'}</span>
+                <span className="font-extrabold text-[#14110f] text-sm">
+                  {typeof champion.zeroToSixtyS === 'number' ? `${champion.zeroToSixtyS}s` : 'N/A'}
+                </span>
               </div>
               <div>
                 <span className="text-[10px] text-neutral-400 uppercase block">Prestige</span>

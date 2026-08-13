@@ -15,10 +15,10 @@ export const HomePage: React.FC = () => {
 
   // Select 4 showcase cars representing normal, luxury, hyper
   const featuredCars = [
-    allCars.find((c) => c.id === 'porsche-911-gt3-rs-2024') || allCars[0],
-    allCars.find((c) => c.id === 'bugatti-chiron-super-sport-2022') || allCars[1],
-    allCars.find((c) => c.id === 'toyota-gr-supra-30-2024') || allCars[2],
-    allCars.find((c) => c.id === 'bmw-m5-cs-2022') || allCars[3],
+    allCars.find((c) => c.id === 'lexus-lfa-2012') || allCars[0],
+    allCars.find((c) => c.id === 'ferrari-laferrari-2015') || allCars[1],
+    allCars.find((c) => c.id === 'dodge-challenger-srt-hellcat-2023') || allCars[2],
+    allCars.find((c) => c.id === 'mclaren-mp4-4-1988') || allCars[3],
   ];
 
   return (
@@ -34,7 +34,7 @@ export const HomePage: React.FC = () => {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-[#14110f] tracking-tight uppercase max-w-4xl leading-[1.05]"
         >
-          Find Your{' '}<span className="text-[#C63A16] underline decoration-2 underline-offset-8">Ultimate Machine</span>.
+          EXPLORE SPECS.{' '}<span className="text-[#C63A16] underline decoration-2 underline-offset-8">MAP YOUR TASTE.</span>
         </motion.h1>
 
         {/* Subheadline */}
@@ -44,7 +44,7 @@ export const HomePage: React.FC = () => {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="mt-6 text-base sm:text-xl text-neutral-600 max-w-2xl font-normal leading-relaxed"
         >
-          Put the world's best sports cars, supercars, and hypercars head-to-head in elimination brackets to discover your exact taste profile.
+          Dive into detailed technical specs across sports cars, supercars, and hypercars—or put them head-to-head in elimination brackets to reveal your ideal machine.
         </motion.p>
 
         {/* Action CTAs */}
@@ -58,7 +58,7 @@ export const HomePage: React.FC = () => {
             to="/bracket"
             variant="primary"
             className="w-full sm:w-auto"
-            icon={<Trophy className="w-4 h-4 text-[#f7f5f2]" />}
+            icon={<Trophy className="w-5 h-5 text-[#f7f5f2]" />}
           >
             Start a Bracket
           </GlassButton>
@@ -66,7 +66,7 @@ export const HomePage: React.FC = () => {
             to="/catalog"
             variant="secondary"
             className="w-full sm:w-auto"
-            icon={<Compass className="w-4 h-4" />}
+            icon={<Compass className="w-5 h-5" />}
           >
             Explore Catalog
           </GlassButton>
@@ -85,7 +85,7 @@ export const HomePage: React.FC = () => {
             </h2>
           </div>
           <span className="text-xs font-mono text-neutral-500">
-            {allCars.length} Verified Models Across 3 Divisions
+            {allCars.length} Verified Models Across 4 Divisions
           </span>
         </div>
 
@@ -142,7 +142,7 @@ export const HomePage: React.FC = () => {
                         Power
                       </span>
                       <span className="font-bold text-[#14110f] text-sm">
-                        {car.horsepower} <span className="text-[10px] text-neutral-500 font-normal">HP</span>
+                        {typeof car.horsepower === 'number' ? `${car.horsepower} HP` : 'N/A'}
                       </span>
                     </div>
                     <div>
@@ -150,7 +150,7 @@ export const HomePage: React.FC = () => {
                         Top Speed
                       </span>
                       <span className="font-bold text-[#14110f] text-[11px] sm:text-xs whitespace-nowrap tracking-tight block">
-                        {car.topSpeedMph} MPH / {Math.round(car.topSpeedMph * 1.60934)} KPH
+                        {typeof car.topSpeedMph === 'number' ? `${car.topSpeedMph} MPH / ${Math.round(car.topSpeedMph * 1.60934)} KPH` : 'N/A'}
                       </span>
                     </div>
                     <div>
@@ -158,7 +158,7 @@ export const HomePage: React.FC = () => {
                         0-60 MPH
                       </span>
                       <span className="font-bold text-[#14110f] text-sm">
-                        {car.zeroToSixtyS !== null ? `${car.zeroToSixtyS}s` : 'N/A'}
+                        {typeof car.zeroToSixtyS === 'number' ? `${car.zeroToSixtyS}s` : 'N/A'}
                       </span>
                     </div>
                     <div>
