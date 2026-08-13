@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Flame, ArrowLeft, Zap, Gauge, Cpu, Globe, Sparkles, Compass } from 'lucide-react';
 import { getCarById } from '../data/carsData';
@@ -9,12 +9,22 @@ import { useDocumentHead } from '../hooks/useDocumentHead';
 
 export const CarDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const car = getCarById(id || '');
   const { toggleSave, isSaved } = useGarageStore();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [id]);
+
+  const handleBack = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (window.history.length > 1 && window.history.state?.idx > 0) {
+      navigate(-1);
+    } else {
+      navigate('/catalog');
+    }
+  };
 
   // 404 / Machine Not Found state
   if (!car) {
@@ -59,13 +69,13 @@ export const CarDetailPage: React.FC = () => {
     <div className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
       {/* Top Navigation Bar */}
       <div className="mb-6 flex items-center justify-between">
-        <Link
-          to="/catalog"
-          className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-neutral-600 hover:text-[#14110f] transition-colors"
+        <button
+          onClick={handleBack}
+          className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-neutral-600 hover:text-[#14110f] transition-colors cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4 text-[#C63A16]" />
-          <span>Back to Catalog</span>
-        </Link>
+          <span>Back</span>
+        </button>
         <span className="text-xs font-mono text-neutral-400">
           ID: {car.id}
         </span>

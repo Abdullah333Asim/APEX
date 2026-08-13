@@ -1,9 +1,10 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, RotateCcw, Flame, SlidersHorizontal, ArrowUpDown } from 'lucide-react';
 import { allCars, filterCars, getAvailableBrands, getStatRanges, FilterParams, formatCompactPrice } from '../data/carsData';
 import { GlassButton } from '../components/ui/GlassButton';
 import { useGarageStore } from '../store/useGarageStore';
+import { useCatalogStore } from '../store/useCatalogStore';
 import { useDocumentHead } from '../hooks/useDocumentHead';
 
 export const CatalogPage: React.FC = () => {
@@ -17,16 +18,24 @@ export const CatalogPage: React.FC = () => {
   const bounds = useMemo(() => getStatRanges(allCars), []);
   const availableBrands = useMemo(() => getAvailableBrands(allCars), []);
 
-  // Filter State
-  const [category, setCategory] = useState<'all' | 'normal' | 'luxury' | 'hyper' | 'f1'>('all');
-  const [search, setSearch] = useState('');
-  const [selectedBrand, setSelectedBrand] = useState('all');
-  const [minHp, setMinHp] = useState<number>(bounds.minHp);
-  const [maxHp, setMaxHp] = useState<number>(bounds.maxHp);
-  const [minPrice, setMinPrice] = useState<number>(bounds.minPrice);
-  const [maxPrice, setMaxPrice] = useState<number>(bounds.maxPrice);
-  const [sortBy, setSortBy] = useState<'horsepower' | 'price' | 'topSpeed' | 'year'>('horsepower');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  // Filter State from persistent store
+  const {
+    category, setCategory,
+    search, setSearch,
+    selectedBrand, setSelectedBrand,
+    minHp: rawMinHp, setMinHp,
+    maxHp: rawMaxHp, setMaxHp,
+    minPrice: rawMinPrice, setMinPrice,
+    maxPrice: rawMaxPrice, setMaxPrice,
+    sortBy, setSortBy,
+    sortOrder, setSortOrder,
+    resetFilters
+  } = useCatalogStore();
+
+  const minHp = rawMinHp ?? bounds.minHp;
+  const maxHp = rawMaxHp ?? bounds.maxHp;
+  const minPrice = rawMinPrice ?? bounds.minPrice;
+  const maxPrice = rawMaxPrice ?? bounds.maxPrice;
 
   // Filtered dataset
   const filteredCars = useMemo(() => {
@@ -56,15 +65,12 @@ export const CatalogPage: React.FC = () => {
   }, []);
 
   const handleResetFilters = () => {
-    setCategory('all');
-    setSearch('');
-    setSelectedBrand('all');
-    setMinHp(bounds.minHp);
-    setMaxHp(bounds.maxHp);
-    setMinPrice(bounds.minPrice);
-    setMaxPrice(bounds.maxPrice);
-    setSortBy('horsepower');
-    setSortOrder('desc');
+    resetFilters({
+      minHp: bounds.minHp,
+      maxHp: bounds.maxHp,
+      minPrice: bounds.minPrice,
+      maxPrice: bounds.maxPrice,
+    });
   };
 
   return (
