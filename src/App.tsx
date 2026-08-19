@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Layout } from './components/layout/Layout';
 import { HomePage } from './pages/HomePage';
 import { CatalogPage } from './pages/CatalogPage';
@@ -42,6 +43,7 @@ export const App: React.FC = () => {
         </Routes>
       </BrowserRouter>
       <Analytics />
+      <SpeedInsights />
     </>
   );
 };
